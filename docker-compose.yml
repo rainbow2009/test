@@ -1,0 +1,78 @@
+version: '3.1'
+
+
+services:
+
+  nginx:
+
+    image: nginx:latest
+
+    container_name: nginx1
+    restart: always
+
+    ports:
+      - 8091:80
+      - 443:443
+
+    volumes:
+      - ${APP_PATH_NGINX_CONF}:/etc/nginx/conf.d
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+      - ${APP_PATH_NGINX_LOG}:/var/log/nginx/
+
+    links:
+      - php
+    working_dir: ${APP_PATH_CONTAINER}
+
+  php:
+    # Билдим с помощью dockerfile указав директорию где он лежит
+    build: ./php
+    container_name: php1
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+    working_dir: ${APP_PATH_CONTAINER}
+
+  php-cli:
+    build: ./php-cli
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+    links:
+      - db
+      - redis
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+    tty: true
+
+
+  redis:
+    container_name: redis1
+    image: redis
+    ports:
+      - 63792:6379
+
+  db:
+    image: mariadb
+    container_name: mariadb1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ${DB_PATH_HOST}:/var/lib/mysql
+
+
+
+  adminer:
+    image: adminer
+    container_name: adminer1
+    restart: always
+    ports:
+      - 8088:8080
+
+  node:
+    image: node
+    restart: always
+    working_dir: ${APP_PATH_CONTAINER}
+    volumes:
+      - ./:${APP_PATH_CONTAINER}
+
+

@@ -1,0 +1,26 @@
+docker-compose up --build
+
+sudo docker-compose exec php bash
+GRANT ALL PRIVILEGES ON DbName.* to UserName@'%' IDENTIFIED BY 'UserPass';
+
+
+
+
+// IDE HELPER
+composer require --dev barryvdh/laravel-ide-helper
+
+        php artisan ide-helper:generate
+
+php artisan ide-helper:models
+
+php artisan ide-helper:meta
+
+docker
+docker container stop $(docker container ls -aq)
+docker container rm $(docker container ls -aq)
+docker-compose up --build
+sudo docker-compose exec php bash
+
+///vuetify
+
+npm install vuetify --save
