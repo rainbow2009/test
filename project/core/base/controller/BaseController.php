@@ -42,8 +42,10 @@ abstract class BaseController
     public function request($args)
     {
         $this->parameters = $args['parameters'];
+
         $outputData = $args['outputMethod'];
         $inputData = $args['inputMethod'];
+        
         $this->$inputData();
         $this->page = $this->$outputData();
 
