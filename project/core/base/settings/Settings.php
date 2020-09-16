@@ -11,7 +11,7 @@ class Settings
             'alias' => 'sudo',
             'path' => 'admin/controller/',
             'hrUrl' => false,
-            
+
         ],
         'settings' => [
             'path' => 'base/settings/'
@@ -25,7 +25,7 @@ class Settings
             'path' => 'user/controller/',
             'hrUrl' => true,
             'routes' => [
-                'catalog'=> 'site/hellow/by'
+
             ],
         ],
         'default' => [
@@ -39,7 +39,6 @@ class Settings
         'text' => ['name', 'phone', 'address'],
         'textArea' => ['content', 'keywords'],
     ];
-    private $lalal='lalala';
 
 
     private function __construct()
@@ -69,24 +68,25 @@ class Settings
 
         foreach ($this as $name => $item) {
             $property = $class::get($name);
-            
+
             if (is_array($property) && is_array($item)) {
                 $baseProperties[$name] = $this->arrayMergeRecurcive($this->$name, $property);
                 continue;
             }
         }
-        if(!$property) $baseProperties[$name] = $this->$name;
+        if (!$property) {
+            $baseProperties[$name] = $this->$name;
+        }
         return $baseProperties;
     }
 
     public function arrayMergeRecurcive()
     {
         $arrays = func_get_args();
-
         $base = array_shift($arrays);
 
         foreach ($arrays as $array) {
-            foreach ($array as $key => $value)
+            foreach ($array as $key => $value) {
                 if (is_array($value) && is_array($base[$key])) {
                     $base[$key] = $this->arrayMergeRecurcive($base[$key], $value);
                 } else {
@@ -98,6 +98,7 @@ class Settings
                     }
                     $base[$key] = $value;
                 }
+            }
         }
         return $base;
     }

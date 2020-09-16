@@ -10,10 +10,8 @@ class RouteController extends BaseController
     static private $_instance;
     protected $routes;
 
-
     private function __construct()
     {
-
         $address_str = $_SERVER['REQUEST_URI'];
 
         if (strrpos($address_str, '/') === strlen($address_str) - 1 && strrpos($address_str, '/') !== 0) {
@@ -54,7 +52,6 @@ class RouteController extends BaseController
                     $this->controller = $this->routes['admin']['path'];
                     $hrUrl = $this->routes['admin']['hrUrl'];
                     $route = 'admin';
-
                 }
 
             } else {
@@ -63,8 +60,8 @@ class RouteController extends BaseController
                 $route = 'user';
             }
 
-
             $this->createRout($route, $url);
+
             if ($url[1]) {
                 $count = count($url);
                 $key = '';
@@ -76,7 +73,6 @@ class RouteController extends BaseController
                 }
 
                 for (; $i < $count; $i++) {
-
                     if (!$key) {
                         $key = $url[$i];
                         $this->parameters[$key] = '';
