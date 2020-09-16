@@ -3,3 +3,7 @@
 2020/09/16 17:19:53 [emerg] 1#1: host not found in upstream "php" in /etc/nginx/conf.d/nginx.conf:13
 2020/09/16 17:20:53 [emerg] 1#1: host not found in upstream "php" in /etc/nginx/conf.d/nginx.conf:13
 2020/09/16 17:21:54 [emerg] 1#1: host not found in upstream "php" in /etc/nginx/conf.d/nginx.conf:13
+2020/09/16 17:22:54 [emerg] 1#1: host not found in upstream "php" in /etc/nginx/conf.d/nginx.conf:13
+2020/09/16 17:23:55 [emerg] 1#1: host not found in upstream "php" in /etc/nginx/conf.d/nginx.conf:13
+2020/09/16 17:24:55 [emerg] 1#1: host not found in upstream "php" in /etc/nginx/conf.d/nginx.conf:13
+2020/09/16 17:25:56 [emerg] 1#1: host not found in upstream "php" in /etc/nginx/conf.d/nginx.conf:13
