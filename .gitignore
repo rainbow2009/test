@@ -11,12 +11,8 @@ db/ib_logfile1
 db/ibdata1
 db/ibtmp1
 db/multi-master.info
-<<<<<<< HEAD
+
 nginx/Logs  
 nginx/Logs/error.log
 nginx/Logs/access.log
-=======
-.idea/
-db/
-nginx/
->>>>>>> b395675f04c0d1349b3f358ce915f3b36d3fb67e
+
