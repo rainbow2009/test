@@ -25,7 +25,7 @@ class Settings
             'path' => 'user/controller/',
             'hrUrl' => true,
             'routes' => [
-'site'=>'index/hellow'
+
             ],
         ],
         'default' => [

@@ -2,14 +2,17 @@
 
 namespace base\controller;
 
+use base\controller\traits\BaseTrait;
 use base\exceptions\RouteException;
 use base\settings\Settings;
 use Exception;
 use http\Exception\RuntimeException;
 
+
 abstract class BaseController
 {
-    use base\controller\tr;
+   
+use BaseTrait;
 
     protected $page;
     protected $errors;

@@ -11,8 +11,7 @@ class IndexController extends BaseController
 
     protected function inputData()
     {
-dd($this->init());
-       
+
     }
 
    
