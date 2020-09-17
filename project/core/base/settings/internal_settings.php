@@ -13,11 +13,11 @@ const QTY_LINKS = 3;
 
 const ADMIN_CSS_JS = [
     'styles' => [],
-    'scripts' => []
+    'scripts' => [] 
 ];
 
 const USER_CSS_JS = [
-    'styles' => [],
+    'styles' => ['css/style.css'],
     'scripts' => []
 ];
 use base\exceptions\RouteException;

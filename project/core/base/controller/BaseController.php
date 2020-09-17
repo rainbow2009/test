@@ -9,6 +9,8 @@ use http\Exception\RuntimeException;
 
 abstract class BaseController
 {
+    use base\controller\tr;
+
     protected $page;
     protected $errors;
 
