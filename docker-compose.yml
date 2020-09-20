@@ -61,12 +61,14 @@ services:
 
 
 
-  adminer:
-    image: adminer
-    container_name: adminer1
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
     restart: always
+    links: 
+      - db
     ports:
-      - 8088:8080
+      - 8088:80
 
   node:
     image: node

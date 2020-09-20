@@ -4,9 +4,13 @@ namespace base\controller;
 
 use base\exceptions\RouteException;
 use base\settings\Settings;
+use base\controller\traits\Singletone ;
+
 
 class RouteController extends BaseController
 {
+    use Singletone;
+
     static private $_instance;
     protected $routes;
 
@@ -23,7 +27,6 @@ class RouteController extends BaseController
         if ($path === PATH) {
 
             $this->routes = Settings::get('routes');
-
             if (!$this->routes) {
                 throw new RouteException('route exception');
             }
@@ -32,15 +35,21 @@ class RouteController extends BaseController
 
             if ($url[0] && $url[0] === $this->routes['admin']['alias']) {
 
+               array_shift($url);
 
                 if ($url[0] && is_dir($_SERVER['DOCUMENT_ROOT'] . PATH . $this->routes['plugins']['path'] . $url[0])) {
-                    $plugin = array_shift($url);
+                    $plugin =  array_shift($url);;
+                 
                     $pluginSettings = $this->routes['settings']['path'] . ucfirst($plugin) . 'Settings';
-
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . PATH . $pluginSettings . '.php')) {
+
                         $pluginSettings = str_replace('/', '\\', $pluginSettings);
+                       
                         $this->routes = $pluginSettings::get('routes');
+
                     }
+                    
+                  
 
                     $dir = $this->routes['plugins']['dir'] ? '/' . $this->routes['plugins']['dir'] . '/' : '/';
                     $dir = str_replace('//', '/', $dir);
@@ -49,7 +58,9 @@ class RouteController extends BaseController
                     $route = 'plugins';
 
                 } else {
+                    
                     $this->controller = $this->routes['admin']['path'];
+                   
                     $hrUrl = $this->routes['admin']['hrUrl'];
                     $route = 'admin';
                 }
@@ -59,7 +70,6 @@ class RouteController extends BaseController
                 $this->controller = $this->routes['user']['path'];
                 $route = 'user';
             }
-
             $this->createRout($route, $url);
 
             if ($url[1]) {
@@ -84,32 +94,18 @@ class RouteController extends BaseController
             }
 
         } else {
-            try {
-                throw new \Exception('bad site dir');
-            } catch (\Exception $e) {
-                exit($e->getMessage());
-            }
-        }
+                throw new RouteException('не коректная директория сайта',1);                  
     }
-
-    private function __clone()
-    {
     }
-
-    static public function getInstance()
-    {
-        if (self::$_instance instanceof self) {
-            return self::$_instance;
-        }
-        return self::$_instance = new self();
-    }
-
+   
     private function createRout($var, $arr)
     {
         $route = [];
-
         if (!empty($arr[0])) {
+           
+           
             if ($this->routes[$var]['routes'][$arr[0]]) {
+
                 $route = explode('/', $this->routes[$var]['routes'][$arr[0]]);
                 $this->controller .= ucfirst($route[0] . 'Controller');
             } else {
@@ -118,6 +114,7 @@ class RouteController extends BaseController
 
             }
         } else {
+            
             $this->controller .= $this->routes['default']['controller'];
         }
 

@@ -11,7 +11,8 @@ require_once("config.php");
 require_once("base/settings/internal_settings.php");
 
 try {
-    RouteController::getInstance()->route();
+   
+    RouteController::instance()->route();
 
 } catch (RouteException $e) {
     exit($e->getMessage());
