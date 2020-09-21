@@ -3,6 +3,7 @@
 namespace admin\controller;
 
 use base\controller\BaseController;
+use admin\model\Model;
 
 class IndexController extends BaseController
 {
@@ -12,6 +13,12 @@ class IndexController extends BaseController
     protected function inputData()
     {
 
+
+        $db = Model::instance();
+        $query = "SELECT * FROM product";
+
+        $res = $db ->query($query, 'e');
+        dd($res);
         $name = 'masha';
         $surname = 'vasay';
         $this->name = 'croco';
