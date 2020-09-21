@@ -19,6 +19,7 @@ class IndexController extends BaseController
 
         $res = $db ->query($query, 'e');
         dd($res);
+<<<<<<< HEAD
 
 
 
@@ -27,6 +28,8 @@ class IndexController extends BaseController
 
 
         
+=======
+>>>>>>> 3ee08f3029708644d629f25eee41495b6e5fbb4d
         $name = 'masha';
         $surname = 'vasay';
         $this->name = 'croco';

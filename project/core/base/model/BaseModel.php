@@ -39,7 +39,11 @@ class BaseModel
 
         switch ($crud) {
 
+<<<<<<< HEAD
             case 'r' :
+=======
+            case 'e' :
+>>>>>>> 3ee08f3029708644d629f25eee41495b6e5fbb4d
                 if ($result->num_rows) {
                     $res = [];
                     for ($i = 0; $i < $result->num_rows; $i++) {
@@ -60,6 +64,7 @@ class BaseModel
 
     }
 
+<<<<<<< HEAD
 /**
  * @param $table bd table
  * @param array set
@@ -142,5 +147,7 @@ $order_by = trim($order_by, ',');
 }
 return $order_by;
     }
+=======
+>>>>>>> 3ee08f3029708644d629f25eee41495b6e5fbb4d
 
 }
