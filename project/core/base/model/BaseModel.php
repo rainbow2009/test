@@ -39,7 +39,7 @@ class BaseModel
 
         switch ($crud) {
 
-            case 'e' :
+            case 'r' :
                 if ($result->num_rows) {
                     $res = [];
                     for ($i = 0; $i < $result->num_rows; $i++) {
@@ -60,5 +60,87 @@ class BaseModel
 
     }
 
+/**
+ * @param $table bd table
+ * @param array set
+ * 'fields' => ['id','name]
+ * 'where' => ['fio', 'name','surname']
+ * 'operand' =>['=', '<>']
+ * 'condition' => ['AND']
+ * 'oreder' => ['fio', 'name']
+ * 'order_direction' => ['ASC','DESC']
+ * 'limit' => '1'
+ */
+
+
+    final public function get($table, $set=[]){
+
+        $fields = $this->createFields($table,$set);
+        $where = $this ->createWhere($table, $set);
+
+        $join_arr = $this->createJoin($table, $set);
+
+        $fields .= $join_arr['fields'];
+        $join = $join_arr['join'];
+        $where .= $join_arr['where'];
+
+
+        $order = $this->createOrder($table, $set);
+
+        $limit = $set['limit'] ? $set['limit']:'';
+        
+        $query = "SELECT $fields FROM $table $join $where $order $limit";
+
+        return $this->query($query);
+    }
+
+    final protected function createFields($table =false, $set){
+
+        $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) 
+        ? $set['fields'] : '*';
+$table = $table ? $table . '.' : '';
+$fields = '';
+foreach($set['fields'] as $field){
+    $fields .= $table . $field .',';
+
+    return $fields;
+}
+
+    }
+
+    final protected function createWhere(){
+
+    }
+
+    final protected function createJoin(){
+
+    }
+
+    final protected function createOrder($table =false, $set){
+
+        $table = $table['order'] ? $table['order'] .'.' : "";
+
+        $order_by = '';
+        if(is_array($set['order']) && !empty($set['order'])){
+$set['order_direction'] = (is_array($set['order_direction']) && !empty($set['order_direction']))
+    ? $set['order_direction'] : "ASC";
+       
+        
+        $order_by = "ORDER BY ";
+        $direct_count = 0;
+
+        foreach($set['order'] as $order){
+            if($set['order_direction'][$direct_count]){
+                $order_direction = strtoupper($set['order_direction'][$direct_count]);
+                $direct_count ++;
+            }else{
+                $order_direction = strtoupper($set['order_direction'][$direct_count -1]);
+            }
+            $order_by .= $table . $order. ' '. $order_direction . ',';
+        }
+$order_by = trim($order_by, ',');
+}
+return $order_by;
+    }
 
 }

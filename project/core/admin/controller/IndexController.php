@@ -19,6 +19,14 @@ class IndexController extends BaseController
 
         $res = $db ->query($query, 'e');
         dd($res);
+
+
+
+
+
+
+
+        
         $name = 'masha';
         $surname = 'vasay';
         $this->name = 'croco';
