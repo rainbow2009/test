@@ -16,5 +16,3 @@ nginx/Logs
 nginx/Logs/error.log
 nginx/Logs/access.log
 .idea/
-docker-compose.yml
-

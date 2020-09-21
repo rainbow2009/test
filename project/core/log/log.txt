@@ -26,3 +26,43 @@ In line 97
 file /var/www/core/base/controller/RouteController.php
 In line 97
 
+: 21-09-2020 12:04:17-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:06:32-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:06:33-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:07:02-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:11:43-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:11:44-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:12:14-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:12:14-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:12:14-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+
+: 21-09-2020 12:12:15-bad file name mysqli
+file /var/www/core/base/settings/internal_settings.php
+In line 30
+

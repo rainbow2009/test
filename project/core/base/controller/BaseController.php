@@ -31,7 +31,7 @@ use BaseTrait;
         $controller = str_replace('/', '\\', $this->controller);
 
         try {
-            $object = new \ReflectionMethod($controller, 'request');
+            $object = @new \ReflectionMethod($controller, 'request');
 
             $args = [
                 'parameters' => $this->parameters,

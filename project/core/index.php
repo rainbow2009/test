@@ -5,6 +5,8 @@ session_start();
 
 use base\controller\RouteController;
 use base\exceptions\RouteException;
+use  base\exceptions\DbException;
+
 
 require_once('helpers.php');
 require_once("config.php");
@@ -15,5 +17,7 @@ try {
     RouteController::instance()->route();
 
 } catch (RouteException $e) {
+    exit($e->getMessage());
+}catch (DbException $e) {
     exit($e->getMessage());
 }
