@@ -15,21 +15,24 @@ class IndexController extends BaseController
 
 
         $db = Model::instance();
-        $query = "SELECT * FROM product";
+       
 
-        $res = $db ->query($query, 'e');
+$table = 'teacher';
+$res = $db->get($table, 
+[
+ 'fields' => ['id','name'],
+ 'where' => ['fio' => 'smirnova', 'name' => 'masha','surname' => 'Sergeevana'],
+  'operand' =>['=', '<>'],
+  'condition' => ['AND'],
+  'order' => ['fio', 'name'],
+  'order_direction' => ['ASC','DESC'],
+  'limit' => '1'
+
+]);
+
+
+
         dd($res);
-<<<<<<< HEAD
-
-
-
-
-
-
-
-        
-=======
->>>>>>> 3ee08f3029708644d629f25eee41495b6e5fbb4d
         $name = 'masha';
         $surname = 'vasay';
         $this->name = 'croco';

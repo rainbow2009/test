@@ -39,11 +39,7 @@ class BaseModel
 
         switch ($crud) {
 
-<<<<<<< HEAD
             case 'r' :
-=======
-            case 'e' :
->>>>>>> 3ee08f3029708644d629f25eee41495b6e5fbb4d
                 if ($result->num_rows) {
                     $res = [];
                     for ($i = 0; $i < $result->num_rows; $i++) {
@@ -64,7 +60,6 @@ class BaseModel
 
     }
 
-<<<<<<< HEAD
 /**
  * @param $table bd table
  * @param array set
@@ -79,19 +74,22 @@ class BaseModel
 
 
     final public function get($table, $set=[]){
-
+      
         $fields = $this->createFields($table,$set);
+       
+
+       
         $where = $this ->createWhere($table, $set);
 
         $join_arr = $this->createJoin($table, $set);
-
+     
         $fields .= $join_arr['fields'];
         $join = $join_arr['join'];
         $where .= $join_arr['where'];
 
 
         $order = $this->createOrder($table, $set);
-
+        dd( $order);
         $limit = $set['limit'] ? $set['limit']:'';
         
         $query = "SELECT $fields FROM $table $join $where $order $limit";
@@ -105,11 +103,12 @@ class BaseModel
         ? $set['fields'] : '*';
 $table = $table ? $table . '.' : '';
 $fields = '';
+
 foreach($set['fields'] as $field){
     $fields .= $table . $field .',';
-
-    return $fields;
 }
+return $fields;
+
 
     }
 
@@ -123,7 +122,7 @@ foreach($set['fields'] as $field){
 
     final protected function createOrder($table =false, $set){
 
-        $table = $table['order'] ? $table['order'] .'.' : "";
+        $table = $table ? $table .'.' : "";
 
         $order_by = '';
         if(is_array($set['order']) && !empty($set['order'])){
@@ -147,7 +146,5 @@ $order_by = trim($order_by, ',');
 }
 return $order_by;
     }
-=======
->>>>>>> 3ee08f3029708644d629f25eee41495b6e5fbb4d
 
 }
