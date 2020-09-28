@@ -1,8 +1,0 @@
-: 21-09-2020 12:22:38-Ошибка подключния к БД: 2002: No such file or directory
-file /var/www/core/base/model/BaseModel.php
-In line 21
-
-: 21-09-2020 13:19:42-Ощибка в SQL запросе:SELECT * FROM product1-1146  Table 'project.product1' doesn't exist
-file /var/www/core/base/model/BaseModel.php
-In line 35
-
