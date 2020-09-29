@@ -15,45 +15,54 @@ class IndexController extends BaseController
 
 
         $db = Model::instance();
-       
 
-$table = 'teacher';
-$res = $db->get($table, 
-[
- 'fields' => ['id','name'],
-  'where' => [ 'name' => 'masha'  ],
-  // 'operand' =>['IN', '<>'],
-  // 'condition' => ["OR",'AND'],
-  'order' => [ 'name'],
-  'order_direction' => ['DESC'],
-  'limit' => '1',
-    // 'join' =>[
-    //   [
-    //   'table' => 'join_table1',
-    //   'fields' => ['id as j_id','name as j_name'],
-    //   'type' =>'left',
-    //   'where' => [ 'name' => 'sasha'],
-    //   'operand' =>['='],
-    //   'condition' => ["OR"],
-    //   'on' => [
-    //    'table' => 'teachers',
-    //    'fields' => ['id', 'parent_id']
-    //   ]
-    // ],
-    // 'join_table2' =>[  
-    //     'table' => 'join_table2',
-    //     'fields' => ['id as j2_id','name as j2_name'],
-    //     'type' =>'left',
-    //     'where' => [ 'name' => 'sasha'],
-    //     'operand' =>['<>'],
-    //    'condition' => ["AND"],
-    //     'on' =>['id', 'parent_id']
-        
-    // ]
-  ]
-]
-);
 
+        $table = 'teacher';
+
+        $files['gallery_img'] = ['fdsfds.jpg', 'fewfewfw.jpg', 'fwefwefw.jpg'];
+        $files['img'] = 'main.jpg';
+
+        $res = $db->add($table, [
+            'fields' => ['name' => 'masha'],
+            'files' => $files
+        ]);
+
+
+//        $res = $db->get($table,
+//            [
+//                'fields' => ['id','name'],
+//                'where' => [ 'name' => 'masha'  ],
+//                 'operand' =>['IN', '<>'],
+//                 'condition' => ["OR",'AND'],
+//                'order' => [ 'name'],
+//                'order_direction' => ['DESC'],
+//                'limit' => '1',
+        // 'join' =>[
+        //   [
+        //   'table' => 'join_table1',
+        //   'fields' => ['id as j_id','name as j_name'],
+        //   'type' =>'left',
+        //   'where' => [ 'name' => 'sasha'],
+        //   'operand' =>['='],
+        //   'condition' => ["OR"],
+        //   'on' => [
+        //    'table' => 'teachers',
+        //    'fields' => ['id', 'parent_id']
+        //   ]
+        // ],
+        // 'join_table2' =>[
+        //     'table' => 'join_table2',
+        //     'fields' => ['id as j2_id','name as j2_name'],
+        //     'type' =>'left',
+        //     'where' => [ 'name' => 'sasha'],
+        //     'operand' =>['<>'],
+        //    'condition' => ["AND"],
+        //     'on' =>['id', 'parent_id']
+
+        // ]
+//            ]
+//        ]
+//    );
 
 
         dd($res);
@@ -61,18 +70,18 @@ $res = $db->get($table,
         $surname = 'vasay';
         $this->name = 'croco';
 
-        $content = $this->render(ADMIN_TEMPLATE.'content', compact('name'));
-        $header= $this->render(ADMIN_TEMPLATE.'header');
-        $footer= $this->render(ADMIN_TEMPLATE.'footer');
+        $content = $this->render(ADMIN_TEMPLATE . 'content', compact('name'));
+        $header = $this->render(ADMIN_TEMPLATE . 'header');
+        $footer = $this->render(ADMIN_TEMPLATE . 'footer');
 
-        return compact('header', 'content','footer');
+        return compact('header', 'content', 'footer');
     }
 
     protected function outputData()
     {
         $vars = func_get_arg(0);
-      $this->page = $this->render(TEMPLATE.'templay', $vars);
+        $this->page = $this->render(TEMPLATE . 'templay', $vars);
     }
 
-   
+
 }

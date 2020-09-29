@@ -3,7 +3,6 @@
 namespace base\controller\traits;
 
 
-
 trait Singletone
 {
     static private $_instance;

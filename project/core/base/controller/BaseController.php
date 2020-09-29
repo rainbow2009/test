@@ -11,8 +11,8 @@ use http\Exception\RuntimeException;
 
 abstract class BaseController
 {
-   
-use BaseTrait;
+
+    use BaseTrait;
 
     protected $page;
     protected $errors;
@@ -66,7 +66,7 @@ use BaseTrait;
         }
 
         if ($this->errors) {
-            $this->writeLog($this->errors );
+            $this->writeLog($this->errors);
         }
 
         $this->getPage();
@@ -83,9 +83,9 @@ use BaseTrait;
             $space = str_replace('\\', '/', $class->getNamespaceName() . '\\');
             $routes = Settings::get('routes');
 
-            if ($space === $routes['user']['path']){
+            if ($space === $routes['user']['path']) {
                 $template = TEMPLATE;
-            }else{
+            } else {
                 $template = ADMIN_TEMPLATE;
             }
 
@@ -112,33 +112,34 @@ use BaseTrait;
         }
         exit();
     }
-    
-    protected function init($admin = false){
 
-        if(!$admin){
-            if(USER_CSS_JS['styles']){
-                 foreach(USER_CSS_JS['styles'] as $item){
-                     $this->styles = PATH. TEMPLATE. trim($item,'/');
-             }
-        }     
+    protected function init($admin = false)
+    {
 
-        if(USER_CSS_JS['scripts']){
-            foreach(USER_CSS_JS['scripts'] as $item){
-                $this->scripts = PATH. TEMPLATE. trim($item,'/');
+        if (!$admin) {
+            if (USER_CSS_JS['styles']) {
+                foreach (USER_CSS_JS['styles'] as $item) {
+                    $this->styles = PATH . TEMPLATE . trim($item, '/');
+                }
             }
-         }
-        }else{
-            if(ADMIN_CSS_JS['styles']){
-                foreach(ADMIN_CSS_JS['styles'] as $item){
-                    $this->scripts = PATH. ADMIN_TEMPLATE. trim($item,'/');
-            }
-       }     
 
-       if(ADMIN_CSS_JS['scripts']){
-           foreach(ADMIN_CSS_JS['scripts'] as $item){
-               $this->styles = PATH. ADMIN_TEMPLATE. trim($item,'/');
-           }
+            if (USER_CSS_JS['scripts']) {
+                foreach (USER_CSS_JS['scripts'] as $item) {
+                    $this->scripts = PATH . TEMPLATE . trim($item, '/');
+                }
+            }
+        } else {
+            if (ADMIN_CSS_JS['styles']) {
+                foreach (ADMIN_CSS_JS['styles'] as $item) {
+                    $this->scripts = PATH . ADMIN_TEMPLATE . trim($item, '/');
+                }
+            }
+
+            if (ADMIN_CSS_JS['scripts']) {
+                foreach (ADMIN_CSS_JS['scripts'] as $item) {
+                    $this->styles = PATH . ADMIN_TEMPLATE . trim($item, '/');
+                }
+            }
         }
-        }
-}
+    }
 }

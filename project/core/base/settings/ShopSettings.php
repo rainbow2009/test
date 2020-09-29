@@ -7,7 +7,7 @@ use base\controller\traits\Singletone;
 
 class ShopSettings
 {
-use Singletone;
+    use Singletone;
 
     private $baseSettings;
 
@@ -27,7 +27,7 @@ use Singletone;
         'textArea' => ['goods_content'],
     ];
 
-   
+
     static public function get($property)
     {
         return self::getInstance()->$property;

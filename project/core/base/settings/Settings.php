@@ -1,11 +1,12 @@
 <?php
 
 namespace base\settings;
+
 use base\controller\traits\Singletone;
 
 class Settings
 {
-use Singletone;
+    use Singletone;
 
     static private $_instance;
 
@@ -44,14 +45,11 @@ use Singletone;
     ];
 
 
-   
-
     static public function get($property)
     {
         return self::instance()->$property;
     }
 
-  
 
     public function clueProperties($class)
     {
