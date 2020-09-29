@@ -124,10 +124,13 @@ class BaseModel extends BaseModelMethods
         return $this->query($query);
     }
 
-    final public function add($table, $set)
+    final public function add($table, $set = [])
     {
-        $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : false;
+        $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : $_POST;
         $set['files'] = (is_array($set['files']) && !empty($set['files'])) ? $set['files'] : false;
+
+if(!$set['files'] &&  !$set['fields']) return false;
+
         $set['return_id'] = $set['return_id'] ? true : false;
         $set['except'] = (is_array($set['except']) && !empty($set['except'])) ? $set['except'] : false;
 
@@ -141,55 +144,61 @@ class BaseModel extends BaseModelMethods
         return false;
     }
 
-    protected function createInsert($fields, $files, $except)
-    {
+   
 
-        if (!$fields) {
-            $fields = $_POST;
-        }
+final public function update($table, $set = []){
 
-        $insert_arr = [];
+    $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : $_POST;
+    $set['files'] = (is_array($set['files']) && !empty($set['files'])) ? $set['files'] : false;
 
-        if ($fields) {
-            $sql_function = ['NOW()'];
-
-            foreach ($fields as $row => $val) {
-
-                if ($except && in_array($row, $except)) {
-                    continue;
-                }
-
-                $insert_arr['fields'] .= $row . ',';
-
-                if (in_array($val, $sql_function)) {
-                    $insert_arr['values'] .= $val . ',';
-                } else {
-                    $insert_arr['values'] .= "'" . addslashes($val) . "',";
-                }
-            }
-        }
-
-        if ($files) {
-
-            foreach ($files as $row => $file) {
-
-                $insert_arr['fields'] .= $row . ',';
-                if (is_array($file)) {
-                    $insert_arr['values'] .= "'" . addslashes(json_encode($file)) . "',";
-                } else {
-                    $insert_arr['values'] .= "'" . addslashes($file) . "',";
-                }
-            }
-
-        }
-        if($insert_arr){
-            foreach ($insert_arr as $key => $arr) {
-                $insert_arr[$key] = rtrim($arr, ',');
-            }
-        }
+if(!$set['files'] &&  !$set['fields']) return false;
 
 
-        return $insert_arr;
+    $set['except'] = (is_array($set['except']) && !empty($set['except'])) ? $set['except'] : false;
+
+    if(!$set['all_rows']){
+
+if($set['where']){
+    $where = $this->createWhere($set);
+}else{
+
+    $columns = $this->showColumns($table);
+
+    if(!$columns) return false;
+
+    if($columns['id_row'] && $set['fields'][$columns['id_row']]){
+        $where = "WHERE" . $columns['id_row'] . '='.$set['fields'][$columns['id_row']];
+        unset($set['fields'][$columns['id_row']]);
     }
+}
+
+    }
+
+    $update = $this->createUpdate( $set['fields'], $set['files'], $set['except']);
+    $query = "UPDATE $table SET $update $where";
+
+    return $this->query($query,'u');
+
+}
+
+
+    final public function showColumns($table){
+
+        $query = "SHOW COLUMNS FROM $table";
+
+        $res = $this->query($query);
+
+        $columns =[];
+
+        foreach($res as $row){
+            $columns[$row['Field']] =$row;
+            if($row['Key']=== "PRI") $columns['id_row'] = $row['Field'];
+        }
+
+        return $columns;
+
+    }
+
+  
 
 }

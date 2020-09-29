@@ -19,12 +19,14 @@ class IndexController extends BaseController
 
         $table = 'teacher';
 
+        $showColumns = $db->showColumns($table);
         $files['gallery_img'] = ['fdsfds.jpg', 'fewfewfw.jpg', 'fwefwefw.jpg'];
         $files['img'] = 'main.jpg';
 
         $res = $db->add($table, [
-            'fields' => ['name' => 'masha'],
-            'files' => $files
+            // 'fields' => ['name' => 'masha'],
+            // 'files' => $files,
+            // 'except' =>['name']
         ]);
 
 
