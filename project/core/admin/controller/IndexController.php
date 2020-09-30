@@ -19,15 +19,16 @@ class IndexController extends BaseController
 
         $table = 'teacher';
 
-        $showColumns = $db->showColumns($table);
-        $files['gallery_img'] = ['fdsfds.jpg', 'fewfewfw.jpg', 'fwefwefw.jpg'];
-        $files['img'] = 'main.jpg';
 
-        $res = $db->add($table, [
-            // 'fields' => ['name' => 'masha'],
-            // 'files' => $files,
-            // 'except' =>['name']
-        ]);
+        for ($i = 0; $i < 8; $i++) {
+            $s_id = $db->add('students', [
+                'fields' => ['name' => 'student - ' . $i, 'content' => 'content - ' . $i],
+                'return_id' => true
+            ]);
+            $db->add('teacher', [
+                'fields' => ['name' => 'teacher - ' . $i, 'student_id' => $s_id]
+            ]);
+        }
 
 
 //        $res = $db->get($table,
@@ -67,7 +68,7 @@ class IndexController extends BaseController
 //    );
 
 
-        dd($res);
+        dd(1);
         $name = 'masha';
         $surname = 'vasay';
         $this->name = 'croco';

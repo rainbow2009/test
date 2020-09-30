@@ -128,8 +128,9 @@ class BaseModel extends BaseModelMethods
     {
         $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : $_POST;
         $set['files'] = (is_array($set['files']) && !empty($set['files'])) ? $set['files'] : false;
-
-if(!$set['files'] &&  !$set['fields']) return false;
+        if (!$set['files'] && !$set['fields']) {
+            return false;
+        }
 
         $set['return_id'] = $set['return_id'] ? true : false;
         $set['except'] = (is_array($set['except']) && !empty($set['except'])) ? $set['except'] : false;
@@ -144,61 +145,124 @@ if(!$set['files'] &&  !$set['fields']) return false;
         return false;
     }
 
-   
 
-final public function update($table, $set = []){
+    final public function update($table, $set = [])
+    {
 
-    $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : $_POST;
-    $set['files'] = (is_array($set['files']) && !empty($set['files'])) ? $set['files'] : false;
+        $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : $_POST;
+        $set['files'] = (is_array($set['files']) && !empty($set['files'])) ? $set['files'] : false;
 
-if(!$set['files'] &&  !$set['fields']) return false;
+        if (!$set['files'] && !$set['fields']) {
+            return false;
+        }
 
 
-    $set['except'] = (is_array($set['except']) && !empty($set['except'])) ? $set['except'] : false;
+        $set['except'] = (is_array($set['except']) && !empty($set['except'])) ? $set['except'] : false;
 
-    if(!$set['all_rows']){
+        if (!$set['all_rows']) {
 
-if($set['where']){
-    $where = $this->createWhere($set);
-}else{
+            if ($set['where']) {
+                $where = $this->createWhere($set);
+            } else {
 
-    $columns = $this->showColumns($table);
+                $columns = $this->showColumns($table);
 
-    if(!$columns) return false;
+                if (!$columns) {
+                    return false;
+                }
 
-    if($columns['id_row'] && $set['fields'][$columns['id_row']]){
-        $where = "WHERE" . $columns['id_row'] . '='.$set['fields'][$columns['id_row']];
-        unset($set['fields'][$columns['id_row']]);
+                if ($columns['id_row'] && $set['fields'][$columns['id_row']]) {
+                    $where = "WHERE " . $columns['id_row'] . '=' . $set['fields'][$columns['id_row']];
+                    unset($set['fields'][$columns['id_row']]);
+                }
+            }
+
+        }
+
+        $update = $this->createUpdate($set['fields'], $set['files'], $set['except']);
+        $query = "UPDATE $table SET $update $where";
+
+        return $this->query($query, 'u');
+
     }
-}
+
+    /**
+     * @param $table db table
+     * @param array set
+     * 'fields' => ['id','name]
+     * 'where' => ['fio', 'name','surname']
+     * 'operand' =>['=', '<>']
+     * 'condition' => ['AND']
+     *  * 'join' =>[
+     *   [
+     *  'table' => 'join_table1',
+     *   'fields' => ['id as j_id','name as j_name'],
+     *   'type' =>'left',
+     *  'where' => [ 'name' => 'sasha'],
+     *   'operand' =>['='],
+     *   'condition' => ["OR"],
+     *   'on' => [
+     *    'table' => 'teachers',
+     *    'fields' => ['id', 'parent_id']
+     *   ]
+     * ],
+     * 'join_table2' =>[
+     *     'table' => 'join_table2',
+     *     'fields' => ['id as j2_id','name as j2_name'],
+     *     'type' =>'left',
+     *     'where' => [ 'name' => 'sasha'],
+     *     'operand' =>['<>'],
+     *   'condition' => ["AND"],
+     *     'on' =>['id', 'parent_id']
+     * ]
+     */
+
+    final public function delete($table, $set)
+    {
+        $table = trim($table);
+        $where = $this->createWhere($set, $table);
+        $columns = $this->showColumns($table);
+        if (!$columns) return false;
+
+        if(is_array($set['fields']) && !empty($set['fields'])){
+
+            if($columns['id_row']){
+                $key = array_search($columns['id_row'],$set['fields']);
+                if ($key !== false) unset($set['fields'][$key]);
+            }
+
+            $fields =[];
+            foreach ($set['fields'] as $field){
+                $fields[$field] = $columns[$field]['Default'];
+            }
+
+            $update = $this->createUpdate($fields,false,false);
+
+            $query = "UPDATE $table SET $update $where";
+
+        }
 
     }
 
-    $update = $this->createUpdate( $set['fields'], $set['files'], $set['except']);
-    $query = "UPDATE $table SET $update $where";
-
-    return $this->query($query,'u');
-
-}
-
-
-    final public function showColumns($table){
+    final public function showColumns($table)
+    {
 
         $query = "SHOW COLUMNS FROM $table";
 
         $res = $this->query($query);
 
-        $columns =[];
+        $columns = [];
 
-        foreach($res as $row){
-            $columns[$row['Field']] =$row;
-            if($row['Key']=== "PRI") $columns['id_row'] = $row['Field'];
+        foreach ($res as $row) {
+            $columns[$row['Field']] = $row;
+            if ($row['Key'] === "PRI") {
+                $columns['id_row'] = $row['Field'];
+            }
         }
 
         return $columns;
 
     }
 
-  
 
 }
