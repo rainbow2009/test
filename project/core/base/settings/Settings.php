@@ -38,7 +38,7 @@ class Settings
             'outputMethod' => 'outputData'
         ],
     ];
-
+    private $defaultTable = 'teacher';
     private $templateArr = [
         'text' => ['name', 'phone', 'address'],
         'textArea' => ['content', 'keywords'],
