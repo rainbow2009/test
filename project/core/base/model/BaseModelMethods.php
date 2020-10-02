@@ -112,27 +112,34 @@ abstract class BaseModelMethods
         $order_by = '';
         if (is_array($set['order']) && !empty($set['order'])) {
             $set['order_direction'] = (is_array($set['order_direction']) && !empty($set['order_direction']))
-                ? $set['order_direction'] : "ASC";
-
+                ? $set['order_direction']: ["ASC"];
 
             $order_by = "ORDER BY ";
             $direct_count = 0;
 
             foreach ($set['order'] as $order) {
                 if ($set['order_direction'][$direct_count]) {
+
                     $order_direction = strtoupper($set['order_direction'][$direct_count]);
                     $direct_count++;
+
                 } else {
+
                     $order_direction = strtoupper($set['order_direction'][$direct_count - 1]);
+
                 }
                 if (is_int($order)) {
+
                     $order_by .= $order . ' ' . $order_direction . ',';
                 } else {
                     $order_by .= $table . $order . ' ' . $order_direction . ',';
                 }
             }
+
+
             $order_by = trim($order_by, ',');
         }
+
         return $order_by;
     }
 

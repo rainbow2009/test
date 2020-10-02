@@ -11,11 +11,14 @@ class ShowController extends BaseAdmin
 
     protected function inputData()
     {
-
-        $this->exectBase();
+        $arr['order_direction'] = "DSC";
+        $this->execBase();
+        $this->createTableData();
+        $this->createData($arr);
     }
 
-    protected function outputData(){
+    protected function outputData()
+    {
 
     }
 
