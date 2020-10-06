@@ -38,7 +38,7 @@ class Settings
             'outputMethod' => 'outputData'
         ],
     ];
-
+    private $defaultTable = 'teacher';
     private $templateArr = [
         'text' => ['name', 'phone', 'address'],
         'textArea' => ['content', 'keywords'],
@@ -73,9 +73,12 @@ class Settings
     {
         $arrays = func_get_args();
         $base = array_shift($arrays);
-
         foreach ($arrays as $array) {
+            if (!is_array($array)) {
+                return $base[] = $array;
+            }
             foreach ($array as $key => $value) {
+
                 if (is_array($value) && is_array($base[$key])) {
                     $base[$key] = $this->arrayMergeRecurcive($base[$key], $value);
                 } else {
