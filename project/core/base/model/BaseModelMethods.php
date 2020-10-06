@@ -17,9 +17,12 @@ abstract class BaseModelMethods
         $table = $table ? $table . '.' : '';
         $fields = '';
 
-        foreach ($set['fields'] as $field) {
-            $fields .= $table . $field . ',';
+        if(is_array($set['fields'])){
+            foreach ($set['fields'] as $field) {
+                $fields .= $table . $field . ',';
+            }
         }
+        
         return trim($fields, ',');
 
 
@@ -277,7 +280,7 @@ abstract class BaseModelMethods
                 if (in_array($val, $this->sqlFunct)) {
                     $update .= $val . ',';
                 } elseif ($val === null) {
-                    $update .= "$val" . ',';
+                    $update .= "NULL" . ',';
 
                 } else {
                     $update .= "'" . addslashes($val) . "',";

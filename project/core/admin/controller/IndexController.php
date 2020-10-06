@@ -20,16 +20,23 @@ class IndexController extends BaseController
         $table = 'teacher';
 
 
-        for ($i = 0; $i < 8; $i++) {
-            $s_id = $db->add('students', [
-                'fields' => ['name' => 'student - ' . $i, 'content' => 'content - ' . $i],
-                'return_id' => true
-            ]);
-            $db->add('teacher', [
-                'fields' => ['name' => 'teacher - ' . $i, 'student_id' => $s_id]
-            ]);
-        }
-
+        // for ($i = 0; $i < 8; $i++) {
+        //     $s_id = $db->add('students', [
+        //         'fields' => ['name' => 'student - ' . $i, 'content' => 'content - ' . $i],
+        //         'return_id' => true
+        //     ]);
+        //     $db->add('teacher', [
+        //         'fields' => ['name' => 'teacher - ' . $i, 'student_id' => $s_id]
+        //     ]);
+        // }
+$res = $db->delete($table, [
+              'where' => [ 'id' => '16'  ],
+              'join' =>[
+                  [ 'table' => 'students',
+                      'on' =>['student_id','id']
+                  ]
+              ],
+]);
 
 //        $res = $db->get($table,
 //            [

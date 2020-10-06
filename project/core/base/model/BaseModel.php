@@ -240,7 +240,14 @@ class BaseModel extends BaseModelMethods
 
             $query = "UPDATE $table SET $update $where";
 
+        }else{
+$join_arr = $this->createJoin($set,$table);
+$join = $join_arr['join'];
+$join_tables =$join_arr['tables'];
+$query = "DELETE " . $table . $join_tables ." FROM ".$table.' '.$join.' '.$where;
         }
+        
+        return $this->query($query,'u');
 
     }
 
