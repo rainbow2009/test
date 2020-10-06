@@ -3,18 +3,16 @@
 
 namespace base\model;
 
-use base\controller\traits\Singletone;
 use base\exceptions\DbException;
 use \mysqli as DB;
 
-class BaseModel extends BaseModelMethods
+abstract class BaseModel extends BaseModelMethods
 {
 
-    use Singletone;
 
     protected $db;
 
-    private function __construct()
+    protected function connect()
     {
 
         $this->db = new DB(HOST, USER, PASS, DB_NAME);
@@ -120,7 +118,6 @@ class BaseModel extends BaseModelMethods
         $limit = $set['limit'] ? "LIMIT " . $set['limit'] : '';
 
         $query = "SELECT $fields FROM $table $join $where $order $limit";
-
         return $this->query($query);
     }
 

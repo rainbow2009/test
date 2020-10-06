@@ -111,12 +111,11 @@ abstract class BaseModelMethods
     {
 
         $table = $table ? $table . '.' : "";
-
         $order_by = '';
+        
         if (is_array($set['order']) && !empty($set['order'])) {
             $set['order_direction'] = (is_array($set['order_direction']) && !empty($set['order_direction']))
                 ? $set['order_direction']: ["ASC"];
-
             $order_by = "ORDER BY ";
             $direct_count = 0;
 
@@ -142,6 +141,7 @@ abstract class BaseModelMethods
 
             $order_by = trim($order_by, ',');
         }
+      
 
         return $order_by;
     }
