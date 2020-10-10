@@ -11,18 +11,17 @@ class ShowController extends BaseAdmin
 
     protected function inputData()
     {
-        $arr['order_direction'] = ["DESC"];
-       $arr['fields']="gallery_img";
-        $this->execBase();
+        
+        if(!$this->userId) {
+            $this->execBase();
+        }
+        
         $this->createTableData();
-        $this->createData($arr);
+        $this->createData();
        return $this->expansion(get_defined_vars());
     }
 
-    protected function outputData()
-    {
-
-    }
+  
 
     protected function createData($arr = [])
     {

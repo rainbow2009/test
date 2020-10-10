@@ -9,8 +9,8 @@ class TeacherExpansion{
     use Singletone;
 
 public function expansion($args =[]){
+    $this ->title = 'alallala';
 
-    dd(33);
 }
 
 }

@@ -44,6 +44,36 @@ class Settings
         'textArea' => ['content', 'keywords'],
     ];
 
+    private $translate = [
+         'name' => ['Название','Не более 100 символов']
+    ];
+
+    private $radio = [
+        'visible' => ['Да','Нет','default'=>'Да']
+    ];
+
+    private $rootItems=[
+        'name' =>'корневая',
+        'tables' =>['teacher']
+    ];
+
+    private $blockNeedle = [
+        'vg-rows' =>[],
+        'vg-img' =>['id'],
+        'vg-content' =>['content']
+    ];
+
+    private $projectTable = [
+        'teacher' => [
+            'name' => 'учителя',
+            'img' =>'pages.png'
+        ],
+        'students' => [
+            'name' => 'студенты',
+            
+            ]
+    ];
+
 private $expansion ='admin/expansion/';
 
     static public function get($property)
