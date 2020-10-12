@@ -50,6 +50,7 @@ abstract class BaseAdmin extends BaseController
             $args = func_get_arg(0);
             $vars = $args ? $args : [];
         // if(!$this->template) $this->template =ADMIN_TEMPLATE.'show';
+       
             $this->content = $this->render($this->template, $vars);
         }
 

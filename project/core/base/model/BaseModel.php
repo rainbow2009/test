@@ -126,6 +126,7 @@ abstract class BaseModel extends BaseModelMethods
     {
         $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : $_POST;
         $set['files'] = (is_array($set['files']) && !empty($set['files'])) ? $set['files'] : false;
+      
         if (!$set['files'] && !$set['fields']) {
             return false;
         }
@@ -135,12 +136,11 @@ abstract class BaseModel extends BaseModelMethods
 
         $insert_arr = $this->createInsert($set['fields'], $set['files'], $set['except']);
 
-        if ($insert_arr) {
-            $query = "INSERT INTO $table({$insert_arr['fields']}) VALUE  ({$insert_arr['values']})";
+       
+        $query = "INSERT INTO $table{$insert_arr['fields']} VALUE  {$insert_arr['values']}";
 
-            return $this->query($query, 'c', $set['return_id']);
-        }
-        return false;
+        return $this->query($query, 'c', $set['return_id']);
+        
     }
 
 

@@ -1,1 +1,0 @@
-<h2 style="color: blue">admin Header</h2>

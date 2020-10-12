@@ -60,7 +60,7 @@ class Settings
     private $blockNeedle = [
         'vg-rows' =>[],
         'vg-img' =>['id'],
-        'vg-content' =>['content']
+        'vg-content' =>['content',]
     ];
 
     private $projectTable = [

@@ -99,7 +99,6 @@ abstract class BaseController
 
             $path = $template . explode('controller', strtolower($class->getShortName()))[0];
         }
-
         ob_start();
         if (!@include_once($path . '.php')) {
             throw new RouteException('не найден шаблон  ' . $path);

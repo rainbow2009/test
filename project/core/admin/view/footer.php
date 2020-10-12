@@ -1,1 +1,0 @@
-<h1>admin footer</h1>

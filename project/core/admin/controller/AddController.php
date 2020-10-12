@@ -12,14 +12,34 @@ class AddController extends BaseAdmin
         if(!$this->userId) {
             $this->execBase();
         }
+     
         $this->createTableData();
+
         $this->createRadio();
         $this->createOutputData();
+         
         $this->createForeignData();
         $this ->createMenuPosition();
-        $this->model->showForeignKeys('articles');
+     
+        // $this->manyAdd();
+        // dd(123);
 
 
+    }
+    
+    protected function manyAdd(){
+
+        $fields = [
+            'name'=> '33!!!', 'menu_position' =>'1',
+           
+        ];
+        $files = [//'img' => '33.jpg'
+            'img' =>[ '33.jpg','33.jpg','33.jpg']
+        ];
+        $this->model->add('teacher',[
+            'fields' => $fields,
+            'files' =>$files
+        ]);
     }
 
     protected function createForeignProperty($arr,$rootItems ){
@@ -104,16 +124,14 @@ class AddController extends BaseAdmin
 
                         $where = 'parent_id IS NULL OR parent_id = 0';
                     }else{
-                        $parent = $this->model->showForeignKeys($this->table,'parent_id',1)[0];
-                        dd(1);
-
+                        $parent = $this->model->showForeignKeys($this->table,'parent_id')[0];
+                      
 
                         if($parent){
 
                             if($this->table === $parent['REFERENCED_TABLE_NAME'] ){
                                 $where = 'parent_id IS NULL OR parent_id = 0';
                             }else{
-
                             $columns = $this->model->showColumns($parent['REFERENCED_TABLE_NAME']);
                             if($columns['parent_id']){
                                 $order[]= 'parent_id';
@@ -147,7 +165,7 @@ class AddController extends BaseAdmin
                $this->foreignData['menu_position'][$i-1]['name'] =$i; 
             }
     }
-    dd($i,$menu_pos,$this->foreignData);
+   
   
     return;
     }
