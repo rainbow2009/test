@@ -26,6 +26,10 @@ abstract class BaseAdmin extends BaseController
     protected $translate;
     protected $blocks=[];
 
+    protected $templateArr;
+    protected $formTemplates;
+    protected $noDelete;
+
     protected function inputData()
     {
 
@@ -39,6 +43,12 @@ abstract class BaseAdmin extends BaseController
         }
         if (!$this->adminPath) {
             $this->adminPath =PATH. Settings::get('routes')['admin']['alias'].'/';
+        }
+        if (!$this->templateArr) {
+            $this->templateArr =Settings::get('templateArr');
+        }
+        if (!$this->formTemplates) {
+            $this->formTemplates =Settings::get('formTemplates');
         }
         $this->sendNoCacheHeaders();
 

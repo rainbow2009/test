@@ -6,6 +6,9 @@ use base\settings\Settings;
 
 class AddController extends BaseAdmin
 {
+
+    protected $action = 'add';
+
     protected function inputData()
     {
         

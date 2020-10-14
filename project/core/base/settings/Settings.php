@@ -39,10 +39,16 @@ class Settings
         ],
     ];
     private $defaultTable = 'teacher';
+    
     private $templateArr = [
-        'text' => ['name', 'phone', 'address'],
-        'textArea' => ['content', 'keywords'],
+        'text' => ['name'],
+        'textarea' => ['content'],
+        
+        'radio' => ['visible'],
+        'img' => ['img'],
+        'gallery_img' =>['gallery_img']
     ];
+    private $formTemplates = PATH.'admin/view/include/form_templates/';
 
     private $translate = [
          'name' => ['Название','Не более 100 символов']
@@ -57,9 +63,10 @@ class Settings
         'tables' =>['teacher']
     ];
 
+
     private $blockNeedle = [
         'vg-rows' =>[],
-        'vg-img' =>['id'],
+        'vg-img' =>['img'],
         'vg-content' =>['content',]
     ];
 
