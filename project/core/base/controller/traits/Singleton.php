@@ -5,7 +5,7 @@ namespace base\controller\traits;
 
 trait Singletone
 {
-    static private $_instance;
+    static private object $_instance;
 
     private function __construct()
     {
