@@ -23,7 +23,7 @@ trait BaseTrait
 
     protected function clearNum($num)
     {
-        $num = $num * 1;
+     return   $num = $num * 1;
     }
 
     protected function isPost()
@@ -50,10 +50,11 @@ trait BaseTrait
         if ($http) {
             $redirect = $http;
         } else {
-            $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER[['HTTP_REFERER']] : PATH;
+            $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : PATH;
         }
+
         header("Location: $redirect");
-        exit();
+        exit;
     }
 
     protected function writeLog($message, $file = 'log.txt', $event = false)

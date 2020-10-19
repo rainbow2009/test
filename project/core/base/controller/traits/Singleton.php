@@ -3,9 +3,9 @@
 namespace base\controller\traits;
 
 
-trait Singletone
+trait Singleton
 {
-    static private object $_instance;
+    static private  $_instance;
 
     private function __construct()
     {

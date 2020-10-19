@@ -7,170 +7,184 @@ use base\settings\Settings;
 class AddController extends BaseAdmin
 {
 
-    protected $action = 'add';
+    /**
+     * @var string
+     */
+    protected  $action = 'add';
 
     protected function inputData()
     {
-        
-        if(!$this->userId) {
+
+        if (!$this->userId) {
             $this->execBase();
         }
-     
         $this->createTableData();
 
         $this->createRadio();
         $this->createOutputData();
-         
+
         $this->createForeignData();
-        $this ->createMenuPosition();
-     
+        $this->createMenuPosition();
+        $this->checkPost();
+
+//        $this->data=[
+//            'name' =>'Man',
+//            'img' => '1.png',
+//            'gallery_img' => json_encode(['1.png','2.png']),
+//            'content' =>'edqwwqerwrew'
+//        ];
+
         // $this->manyAdd();
         // dd(123);
 
 
     }
-    
-    protected function manyAdd(){
+
+    protected function manyAdd()
+    {
 
         $fields = [
-            'name'=> '33!!!', 'menu_position' =>'1',
-           
+            'name' => '33!!!', 'menu_position' => '1',
+
         ];
         $files = [//'img' => '33.jpg'
-            'img' =>[ '33.jpg','33.jpg','33.jpg']
+            'img' => ['33.jpg', '33.jpg', '33.jpg']
         ];
-        $this->model->add('teacher',[
+        $this->model->add('teacher', [
             'fields' => $fields,
-            'files' =>$files
+            'files' => $files
         ]);
     }
 
-    protected function createForeignProperty($arr,$rootItems ){
+    protected function createForeignProperty($arr, $rootItems)
+    {
 
-        if(in_array($this->table, $rootItems['tables'])){
+        if (in_array($this->table, $rootItems['tables'])) {
             $this->foreignData[$arr['COLUMN_NAME']][0]['id'] = 0;
             $this->foreignData[$arr['COLUMN_NAME']][0]['name'] = $rootItems['name'];
         }
         $columns = $this->model->showColumns($arr['REFERENCED_TABLE_NAME']);
-        $name ='';
+        $name = '';
 
-        if($columns['name']){
+        if ($columns['name']) {
             $name = 'name';
-        }else{
-            foreach($columns as $key => $val){
-                if(strpos($key,'name') !== false){
+        } else {
+            foreach ($columns as $key => $val) {
+                if (strpos($key, 'name') !== false) {
                     $name = $key . ' as name';
                 }
             }
 
-            if(!$name) $name = $columns['id_row'] . ' as name';
+            if (!$name) $name = $columns['id_row'] . ' as name';
 
         }
 
-        if($this->data){
-            if($arr['REFERENCED_TABLE_NAME'] === $this->table){
+        if ($this->data) {
+            if ($arr['REFERENCED_TABLE_NAME'] === $this->table) {
                 $where[$this->columns['id_row']] = $this->data[$this->columns['id_row']];
                 $operand[] = '<>';
             }
         }
 
         $foreign = $this->model->get($arr['REFERENCED_TABLE_NAME'], [
-            'fields' => [$arr['REFERENCED_COLUMN_NAME']. ' as id', $name], 
+            'fields' => [$arr['REFERENCED_COLUMN_NAME'] . ' as id', $name],
             'where' => $where,
-            'operand' => $operand                   
-            ]);
-          
+            'operand' => $operand
+        ]);
 
-        if( $foreign){
-            
-            if($this->foreignData[$arr['COLUMN_NAME']]){
-                foreach($foreign as $val){
-                    $this->foreignData[$arr['COLUMN_NAME']][] =$val;
+
+        if ($foreign) {
+
+            if ($this->foreignData[$arr['COLUMN_NAME']]) {
+                foreach ($foreign as $val) {
+                    $this->foreignData[$arr['COLUMN_NAME']][] = $val;
                 }
-            }else $this->foreignData[$arr['COLUMN_NAME']] = $foreign; 
-            
-        }    
+            } else $this->foreignData[$arr['COLUMN_NAME']] = $foreign;
+
+        }
     }
 
-    protected function createForeignData($setings = false){
-        if(!$setings) $setings = Settings::instance();
+    protected function createForeignData($setings = false)
+    {
+        if (!$setings) $setings = Settings::instance();
 
         $rootItems = $setings::get('rootItems');
-       
-        $keys = $this->model->showForeignKeys($this->table);
-        if($keys){
 
-            foreach($keys as $item){
-                $this->createForeignProperty($item,$rootItems);
+        $keys = $this->model->showForeignKeys($this->table);
+        if ($keys) {
+
+            foreach ($keys as $item) {
+                $this->createForeignProperty($item, $rootItems);
             }
 
-        }elseif($this->columns['parent_id']){
+        } elseif ($this->columns['parent_id']) {
 
-            $arr['COLUMN_NAME'] ='parent_id';
-            $arr['REFERENCED_COLUMN_NAME'] =$this->columns['id_row'];
+            $arr['COLUMN_NAME'] = 'parent_id';
+            $arr['REFERENCED_COLUMN_NAME'] = $this->columns['id_row'];
             $arr['REFERENCED_TABLE_NAME'] = $this->table;
 
-            $this->createForeignProperty($arr, $rootItems);      
+            $this->createForeignProperty($arr, $rootItems);
         }
     }
 
-    protected function createMenuPosition($setings = false){
-     
-        if($this->columns['menu_position']){
+    protected function createMenuPosition($setings = false)
+    {
 
-            if(!$setings) $setings = Settings::instance();
-                $rootItems = $setings::get('rootItems');
+        if ($this->columns['menu_position']) {
 
-                if($this->columns['parent_id']){
+            if (!$setings) $setings = Settings::instance();
+            $rootItems = $setings::get('rootItems');
 
-                    if(in_array($this->table,$rootItems['tables'])){
+            if ($this->columns['parent_id']) {
 
-                        $where = 'parent_id IS NULL OR parent_id = 0';
-                    }else{
-                        $parent = $this->model->showForeignKeys($this->table,'parent_id')[0];
-                      
+                if (in_array($this->table, $rootItems['tables'])) {
 
-                        if($parent){
+                    $where = 'parent_id IS NULL OR parent_id = 0';
+                } else {
+                    $parent = $this->model->showForeignKeys($this->table, 'parent_id')[0];
 
-                            if($this->table === $parent['REFERENCED_TABLE_NAME'] ){
-                                $where = 'parent_id IS NULL OR parent_id = 0';
-                            }else{
+
+                    if ($parent) {
+
+                        if ($this->table === $parent['REFERENCED_TABLE_NAME']) {
+                            $where = 'parent_id IS NULL OR parent_id = 0';
+                        } else {
                             $columns = $this->model->showColumns($parent['REFERENCED_TABLE_NAME']);
-                            if($columns['parent_id']){
-                                $order[]= 'parent_id';
-                            }else{
-                                $order[]=$parent['REFERENCED_COLUMN_NAME'];
+                            if ($columns['parent_id']) {
+                                $order[] = 'parent_id';
+                            } else {
+                                $order[] = $parent['REFERENCED_COLUMN_NAME'];
                             }
-                            $id = $this->model->get($parent['REFERENCED_TABLE_NAME'],[
+                            $id = $this->model->get($parent['REFERENCED_TABLE_NAME'], [
                                 'fields' => [$parent['REFERENCED_COLUMN_NAME']],
                                 'order' => $order,
-                                'limit' =>'1'
+                                'limit' => '1'
                             ])[0][$parent['REFERENCED_COLUMN_NAME']];
 
-                            if($id){
-                                $where = ['parent_id' =>$id];
-                            } 
+                            if ($id) {
+                                $where = ['parent_id' => $id];
+                            }
                         }
-                    }else{
+                    } else {
                         $where = 'parent_id IS NULL OR parent_id = 0';
+                    }
                 }
+            }
+
+            $menu_pos = $this->model->get($this->table, [
+                    'fields' => ['COUNT(*) as count'],
+                    'where' => $where,
+                    'no_concat' => true
+                ])[0]['count'] + 1;
+
+            for ($i = 1; $i <= $menu_pos; $i++) {
+                $this->foreignData['menu_position'][$i - 1]['id'] = $i;
+                $this->foreignData['menu_position'][$i - 1]['name'] = $i;
             }
         }
 
-        $menu_pos = $this ->model ->get($this ->table,[
-            'fields' => ['COUNT(*) as count'],
-            'where' => $where,
-            'no_concat' =>true
-        ])[0]['count'] +1;
 
-            for($i=1; $i <=$menu_pos; $i ++){
-               $this->foreignData['menu_position'][$i-1]['id'] =$i; 
-               $this->foreignData['menu_position'][$i-1]['name'] =$i; 
-            }
+        return;
     }
-   
-  
-    return;
-    }
-   
+
 }

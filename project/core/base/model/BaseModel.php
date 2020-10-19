@@ -106,7 +106,6 @@ abstract class BaseModel extends BaseModelMethods
 
         $fields = $this->createFields($set, $table);
 
-
         $where = $this->createWhere($set, $table);
         $join_arr = $this->createJoin($set, $table);
 
@@ -126,7 +125,6 @@ abstract class BaseModel extends BaseModelMethods
     {
         $set['fields'] = (is_array($set['fields']) && !empty($set['fields'])) ? $set['fields'] : $_POST;
         $set['files'] = (is_array($set['files']) && !empty($set['files'])) ? $set['files'] : false;
-      
         if (!$set['files'] && !$set['fields']) {
             return false;
         }

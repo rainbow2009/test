@@ -4,12 +4,12 @@ namespace base\controller;
 
 use base\exceptions\RouteException;
 use base\settings\Settings;
-use base\controller\traits\Singletone;
+use base\controller\traits\Singleton;
 
 
 class RouteController extends BaseController
 {
-    use Singletone;
+    use Singleton;
 
     static private $_instance;
     protected $routes;

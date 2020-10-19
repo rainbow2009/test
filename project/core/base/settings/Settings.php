@@ -2,11 +2,11 @@
 
 namespace base\settings;
 
-use base\controller\traits\Singletone;
+use base\controller\traits\Singleton;
 
 class Settings
 {
-    use Singletone;
+    use Singleton;
 
     static private $_instance;
 
@@ -43,7 +43,7 @@ class Settings
     private $templateArr = [
         'text' => ['name'],
         'textarea' => ['content'],
-        
+        'select' =>['menu_position','parent_id'],
         'radio' => ['visible'],
         'img' => ['img'],
         'gallery_img' =>['gallery_img']
@@ -51,11 +51,13 @@ class Settings
     private $formTemplates = PATH.'admin/view/include/form_templates/';
 
     private $translate = [
-         'name' => ['Название','Не более 100 символов']
+         'name' => ['Название','Не более 100 символов'],
+        'content' => ['Контент','Не более 70 символов'],
+         'menu_position' => ['Название1','Не']
     ];
 
     private $radio = [
-        'visible' => ['Да','Нет','default'=>'Да']
+        'visible' => ['Нет','Да','default'=>'Да']
     ];
 
     private $rootItems=[
@@ -70,6 +72,16 @@ class Settings
         'vg-content' =>['content',]
     ];
 
+    private $validation = [
+        'name' => ['empty' => true,'trim'=>true],
+        'content' => ['empty' => true,'trim'=>true,'count' =>70],
+        'price' => ['int' => true],
+        'login' => ['empty' => true,'trim' =>true],
+        'password' =>['crypt' =>true],
+        'keywords' => ['count' =>4, 'trim' =>true],
+        'description' => ['count' =>160,'trim' =>true]
+    ];
+
     private $projectTable = [
         'teacher' => [
             'name' => 'учителя',
@@ -82,6 +94,8 @@ class Settings
     ];
 
 private $expansion ='admin/expansion/';
+
+private  $messages ='base/messages/';
 
     static public function get($property)
     {

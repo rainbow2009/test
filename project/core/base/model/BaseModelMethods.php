@@ -14,15 +14,15 @@ abstract class BaseModelMethods
 
         $set['fields'] = (is_array($set['fields']) && !empty($set['fields']))
             ? $set['fields'] : '*';
-        $table = ($table && !$set['no_concat'] )? $table . '.' : '';
+        $table = ($table && !$set['no_concat']) ? $table . '.' : '';
         $fields = '';
 
-        if(is_array($set['fields'])){
+        if (is_array($set['fields'])) {
             foreach ($set['fields'] as $field) {
                 $fields .= $table . $field . ',';
             }
         }
-        
+
         return trim($fields, ',');
 
 
@@ -30,14 +30,14 @@ abstract class BaseModelMethods
 
     final protected function createWhere($set, $table = false, $instruction = "WHERE")
     {
-        $table = ($table && !$set['no_concat'] )? $table . '.' : '';
+        $table = ($table && !$set['no_concat']) ? $table . '.' : '';
 
         $where = '';
 
-        if(is_string($set['where'])){
-             return $instruction . ' ' . trim($set['where']);
+        if (is_string($set['where'])) {
+            return $instruction . ' ' . trim($set['where']);
         }
-        
+
         if (is_array($set['where']) && !empty($set['where'])) {
 
             $set['operand'] = (is_array($set['operand']) && !empty($set['operand'])
@@ -115,12 +115,12 @@ abstract class BaseModelMethods
     final protected function createOrder($set, $table = false)
     {
 
-        $table = ($table && !$set['no_concat'] )? $table . '.' : '';
+        $table = ($table && !$set['no_concat']) ? $table . '.' : '';
         $order_by = '';
-        
+
         if (is_array($set['order']) && !empty($set['order'])) {
             $set['order_direction'] = (is_array($set['order_direction']) && !empty($set['order_direction']))
-                ? $set['order_direction']: ["ASC"];
+                ? $set['order_direction'] : ["ASC"];
             $order_by = "ORDER BY ";
             $direct_count = 0;
 
@@ -146,7 +146,7 @@ abstract class BaseModelMethods
 
             $order_by = trim($order_by, ',');
         }
-      
+
 
         return $order_by;
     }
@@ -207,7 +207,7 @@ abstract class BaseModelMethods
 
                     $join .= '.' . $join_fields[0] . '=' . $key . '.' . $join_fields[1];
                     $join_table = $key;
-                    $tables .= ', '. trim($join_table);
+                    $tables .= ', ' . trim($join_table);
 
                     if ($new_where) {
                         if ($valeu["where"]) {
@@ -235,82 +235,82 @@ abstract class BaseModelMethods
         $insert_arr = [];
 
         $insert_arr['fields'] .= '(';
-         
+
         $array_type = array_keys($fields)[0];
-        if(is_int($array_type)){
+        if (is_int($array_type)) {
 
             $check_fields = false;
             $count_fields = 0;
 
-            foreach($fields as $i =>$item){
+            foreach ($fields as $i => $item) {
 
-                $insert_arr['values'] .='(';
+                $insert_arr['values'] .= '(';
 
-                if(!$count_fields) $count_fields = count($fields[$i]); 
+                if (!$count_fields) $count_fields = count($fields[$i]);
                 $j = 0;
 
-                foreach($item as $row =>$val){
-                    if($except && in_array($row,$except)) continue;
-                    
-                    if(!$check_fields) $insert_arr['fields'] .= $row .',';
-                    if(in_array($val,$this->sqlFunct)){
-                        $insert_arr['values'] .= $val .',';
-                    }elseif($val === 'NULL' || $val === NULL){
+                foreach ($item as $row => $val) {
+                    if ($except && in_array($row, $except)) continue;
+
+                    if (!$check_fields) $insert_arr['fields'] .= $row . ',';
+                    if (in_array($val, $this->sqlFunct)) {
+                        $insert_arr['values'] .= $val . ',';
+                    } elseif ($val === 'NULL' || $val === NULL) {
                         $insert_arr['values'] .= "NULL" . ',';
-                    }else{
-                        $insert_arr['values'] .= "'". addslashes($val) ."',";
+                    } else {
+                        $insert_arr['values'] .= "'" . addslashes($val) . "',";
                     }
                     $j++;
 
-                    if($j === $count_fields) break;
+                    if ($j === $count_fields) break;
 
                 }
 
-                if($j < $count_fields){
-                    for(;$j< $count_fields;$j++){
-                        $insert_arr['values'] .= "NULL".',';
-                    }
-                }
-
-                $insert_arr['values'] = rtrim($insert_arr['values'],',') . '),';
-
-                if($count_fields) $check_fields = true;
-            }
-        }else{
-           
-            $insert_arr['values'] = '(';
-            if($fields){
-                foreach($fields as $row =>$val){
-
-                    if($except && in_array($row,$except)) continue;
-                    
-                    $insert_arr['fields'] .= $row .',';
-                    if(in_array($val,$this->sqlFunct)){
-                        $insert_arr['values'] .= $val .',';
-                    }elseif($val === 'NULL' || $val === NULL){
+                if ($j < $count_fields) {
+                    for (; $j < $count_fields; $j++) {
                         $insert_arr['values'] .= "NULL" . ',';
-                    }else{
-                        $insert_arr['values'] .= "'". addslashes($val) ."',";
                     }
-                   
+                }
+
+                $insert_arr['values'] = rtrim($insert_arr['values'], ',') . '),';
+
+                if ($count_fields) $check_fields = true;
+            }
+        } else {
+
+            $insert_arr['values'] = '(';
+            if ($fields) {
+                foreach ($fields as $row => $val) {
+
+                    if ($except && in_array($row, $except)) continue;
+
+                    $insert_arr['fields'] .= $row . ',';
+                    if (in_array($val, $this->sqlFunct)) {
+                        $insert_arr['values'] .= $val . ',';
+                    } elseif ($val === 'NULL' || $val === NULL) {
+                        $insert_arr['values'] .= "NULL" . ',';
+                    } else {
+                        $insert_arr['values'] .= "'" . addslashes($val) . "',";
+                    }
+
 
                 }
             }
-            if($files){
-                foreach($files as $row => $file){
-                    $insert_arr['fields'] .= $row .',';
-                    if(is_array($file)) $insert_arr['values'] 
-                    .= "'" . addslashes(json_encode($file)) . "',";
-                    else{
-                        $insert_arr['values'].= "'" . addslashes($file) ."',";
+            if ($files) {
+                foreach ($files as $row => $file) {
+                    $insert_arr['fields'] .= $row . ',';
+                    if (is_array($file)) $insert_arr['values']
+                        .= "'" . addslashes(json_encode($file)) . "',";
+                    else {
+                        $insert_arr['values'] .= "'" . addslashes($file) . "',";
                     }
 
                 }
             }
-            $insert_arr['values'] = rtrim($insert_arr['values'],',') . ')';
+            $insert_arr['values'] = rtrim($insert_arr['values'], ',') . ')';
         }
-        $insert_arr['fields'] = rtrim($insert_arr['fields'],',') . ')';
-        $insert_arr['values'] = rtrim($insert_arr['values'],',');
+        $insert_arr['fields'] = rtrim($insert_arr['fields'], ',') . ')';
+        $insert_arr['values'] = rtrim($insert_arr['values'], ',');
         return $insert_arr;
     }
 

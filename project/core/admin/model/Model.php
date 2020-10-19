@@ -3,12 +3,12 @@
 
 namespace admin\model;
 
-use base\controller\traits\Singletone;
+use base\controller\traits\Singleton;
 use base\model\BaseModel;
 
 class Model extends BaseModel
 {
-use Singletone;
+use Singleton;
 
 private function __construct(){
     $this->connect();
