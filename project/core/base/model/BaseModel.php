@@ -134,11 +134,11 @@ abstract class BaseModel extends BaseModelMethods
 
         $insert_arr = $this->createInsert($set['fields'], $set['files'], $set['except']);
 
-       
+
         $query = "INSERT INTO $table{$insert_arr['fields']} VALUE  {$insert_arr['values']}";
 
         return $this->query($query, 'c', $set['return_id']);
-        
+
     }
 
 
@@ -218,32 +218,36 @@ abstract class BaseModel extends BaseModelMethods
         $table = trim($table);
         $where = $this->createWhere($set, $table);
         $columns = $this->showColumns($table);
-        if (!$columns) return false;
+        if (!$columns) {
+            return false;
+        }
 
-        if(is_array($set['fields']) && !empty($set['fields'])){
+        if (is_array($set['fields']) && !empty($set['fields'])) {
 
-            if($columns['id_row']){
-                $key = array_search($columns['id_row'],$set['fields']);
-                if ($key !== false) unset($set['fields'][$key]);
+            if ($columns['id_row']) {
+                $key = array_search($columns['id_row'], $set['fields']);
+                if ($key !== false) {
+                    unset($set['fields'][$key]);
+                }
             }
 
-            $fields =[];
-            foreach ($set['fields'] as $field){
+            $fields = [];
+            foreach ($set['fields'] as $field) {
                 $fields[$field] = $columns[$field]['Default'];
             }
 
-            $update = $this->createUpdate($fields,false,false);
+            $update = $this->createUpdate($fields, false, false);
 
             $query = "UPDATE $table SET $update $where";
 
-        }else{
-$join_arr = $this->createJoin($set,$table);
-$join = $join_arr['join'];
-$join_tables =$join_arr['tables'];
-$query = "DELETE " . $table . $join_tables ." FROM ".$table.' '.$join.' '.$where;
+        } else {
+            $join_arr = $this->createJoin($set, $table);
+            $join = $join_arr['join'];
+            $join_tables = $join_arr['tables'];
+            $query = "DELETE " . $table . $join_tables . " FROM " . $table . ' ' . $join . ' ' . $where;
         }
-        
-        return $this->query($query,'u');
+
+        return $this->query($query, 'u');
 
     }
 
@@ -265,6 +269,20 @@ $query = "DELETE " . $table . $join_tables ." FROM ".$table.' '.$join.' '.$where
 
         return $columns;
 
+    }
+
+    final public function showTables()
+    {
+        $query = "SHOW TABLE;";
+        $tables = $this->query($query);
+
+        $tables_arr = [];
+        if ($tables) {
+            foreach ($tables as $table) {
+                $tables_arr[] = reset($table);
+            }
+        }
+        return $tables_arr;
     }
 
 

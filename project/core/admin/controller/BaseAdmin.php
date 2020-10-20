@@ -8,6 +8,7 @@ use admin\model\Model;
 use base\controller\BaseController;
 use base\exceptions\RouteException;
 use base\settings\Settings;
+use libraries\FileEdit;
 
 abstract class BaseAdmin extends BaseController
 {
@@ -104,7 +105,9 @@ abstract class BaseAdmin extends BaseController
             if ($this->parameters) {
                 $this->table = array_keys($this->parameters)[0];
             } else {
-                if (!$settings) $settings = Settings::instance();
+                if (!$settings) {
+                    $settings = Settings::instance();
+                }
                 $this->table = $settings::get('defaultTable');
             }
         }
@@ -152,7 +155,9 @@ abstract class BaseAdmin extends BaseController
             $file = $_SERVER['DOCUMENT_ROOT'] . PATH . $path . $this->table . '.php';
             extract($args);
 
-            if (is_readable($file)) return include $file;
+            if (is_readable($file)) {
+                return include $file;
+            }
 
             return false;
 
@@ -163,13 +168,17 @@ abstract class BaseAdmin extends BaseController
     protected function createOutputData($settings = false)
     {
 
-        if (!$settings) $settings = Settings::instance();
+        if (!$settings) {
+            $settings = Settings::instance();
+        }
 
         $blocks = $settings::get('blockNeedle');
         $this->translate = $settings::get('translate');
         if (!$blocks || !is_array($blocks)) {
             foreach ($this->columns as $name => $item) {
-                if ($name === 'id_row') continue;
+                if ($name === 'id_row') {
+                    continue;
+                }
                 if (!$this->translate[$name]) {
                     $this->translate[$name][] = $name;
                 }
@@ -183,19 +192,25 @@ abstract class BaseAdmin extends BaseController
 
         foreach ($this->columns as $name => $item) {
 
-            if ($name === 'id_row') continue;
+            if ($name === 'id_row') {
+                continue;
+            }
 
             $insert = false;
 
             foreach ($blocks as $block => $val) {
-                if (!array_key_exists($block, $this->blocks)) $this->blocks[$block] = [];
+                if (!array_key_exists($block, $this->blocks)) {
+                    $this->blocks[$block] = [];
+                }
                 if (in_array($name, $val)) {
                     $this->blocks[$block][] = $name;
                     $insert = true;
                     break;
                 }
             }
-            if (!$insert) $this->blocks[$default][] = $name;
+            if (!$insert) {
+                $this->blocks[$default][] = $name;
+            }
             if (!$this->translate[$name]) {
                 $this->translate[$name][] = $name;
             }
@@ -204,7 +219,9 @@ abstract class BaseAdmin extends BaseController
 
     protected function createRadio($settings = false)
     {
-        if (!$settings) $settings = Settings::instance();
+        if (!$settings) {
+            $settings = Settings::instance();
+        }
         $radio = $settings::get('radio');
 
         if ($radio) {
@@ -233,7 +250,9 @@ abstract class BaseAdmin extends BaseController
 
     protected function addSessionData($arr = [])
     {
-        if (!$arr) $arr = &$_POST;
+        if (!$arr) {
+            $arr = &$_POST;
+        }
         foreach ($arr as $key => $item) {
             $_SESSION['res'][$key] = $item;
         }
@@ -265,12 +284,18 @@ abstract class BaseAdmin extends BaseController
 
     protected function clearPostFields($settings, &$arr = [])
     {
-        if (!$arr) $arr = &$_POST;
+        if (!$arr) {
+            $arr = &$_POST;
+        }
 
-        if (!$settings) $settings = Settings::instance();
+        if (!$settings) {
+            $settings = Settings::instance();
+        }
         $validate = $settings::get('validation');
         $id = $_POST[$this->columns['id_row']] ?: false;
-        if (!$this->translate) $this->translate = $settings::get('translate');
+        if (!$this->translate) {
+            $this->translate = $settings::get('translate');
+        }
 
         foreach ($arr as $key => $item) {
             if (is_array($item)) {
@@ -318,7 +343,7 @@ abstract class BaseAdmin extends BaseController
 
         }
 
-        if (isset( $_SESSION['res']['answer'][0])) {
+        if (isset($_SESSION['res']['answer'][0])) {
 
             $this->addSessionData($arr);
             exit();
@@ -341,7 +366,9 @@ abstract class BaseAdmin extends BaseController
             }
         }
         foreach ($this->columns as $key => $val) {
-            if ($key === 'id_row') continue;
+            if ($key === 'id_row') {
+                continue;
+            }
             if ($val['Type'] === 'date' || $val['Type'] === 'datetime') {
                 !$_POST[$key] && $_POST[$key] = 'NOW()';
             }
@@ -373,11 +400,15 @@ abstract class BaseAdmin extends BaseController
 
         if ($res_id) {
             $_SESSION['res']['answer'][] = '<div class="vg-element vg-padding-in-px" style="color: green">' . $answerSuccess . '</div>';
-            if (!$returnId) $this->redirect();
+            if (!$returnId) {
+                $this->redirect();
+            }
             return $_POST[$this->columns['id_row']];
         } else {
             $_SESSION['res']['answer'][] = '<div class="vg-element vg-padding-in-px" style="color: red">' . $answerFail . '</div>';
-            if (!$returnId) $this->redirect();
+            if (!$returnId) {
+                $this->redirect();
+            }
         }
 
 
@@ -385,6 +416,8 @@ abstract class BaseAdmin extends BaseController
 
     protected function createFile()
     {
+        $fileEdit = new FileEdit();
+        $this->fileArr = $fileEdit->addFile();
 
     }
 
@@ -425,14 +458,13 @@ abstract class BaseAdmin extends BaseController
 
             if (!$res_alias) {
                 $_POST['alias'] = $alias;
-            }
-            else {
+            } else {
                 $this->alias = $alias;
                 $_POST['alias'] = '';
             }
 
-            if ($_POST['alias'] && $id){
-                method_exists($this,'checkOldAlias') && $this->checkOldAlias($id);
+            if ($_POST['alias'] && $id) {
+                method_exists($this, 'checkOldAlias') && $this->checkOldAlias($id);
             }
 
         }
@@ -459,7 +491,18 @@ abstract class BaseAdmin extends BaseController
 
     protected function checkAlias($id)
     {
-
+        if ($id) {
+            if ($this->alias) {
+                $this->alias .= '-' . $id;
+                $this->model->edit($this->table, [
+                    'fields' => ['alias' => $this->alias],
+                    'where' => [$this->columns['id_row'] => $id]
+                ]);
+                return true;
+            }
+        }
+        return false;
     }
+
 
 }
