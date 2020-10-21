@@ -41,7 +41,7 @@ class FileEdit
                 }
             } else {
                 if ($file['name']) {
-                    $res_name = $this->createFile($file['name']);
+                    $res_name = $this->createFile($file);
                     if ($res_name) {
                         $this->imgArr[$key] = $res_name;
                     }
@@ -64,12 +64,21 @@ class FileEdit
     protected function createFile($file)
     {
         $fileName = explode('.', $file['name']);
+
         $ext = $fileName[count($fileName) - 1];
         unset($fileName[count($fileName) - 1]);
 
-        $fileName = explode('.', $fileName);
-        $fileName = (new TextModify())->translit($fileName);
+        $fileName = explode('.', $fileName[0]);
+
+        $fileName = (new TextModify())->translit($fileName[0]);
         $fileName = $this->checkFile($fileName, $ext);
+        $dest = $this->pathToDir . $fileName;
+
+        if ($this->uploadFile($file['tmp_name'], $dest)) {
+            return $fileName;
+        }
+
+        return false;
     }
 
     protected function checkFile($fileName, $ext, $fileLastName = '')
@@ -78,7 +87,12 @@ class FileEdit
             return $fileName . $fileLastName . '.' . $ext;
         }
 
-        return $this->checkFile($fileName,$ext,hash('crc32',time()));
+        return $this->checkFile($fileName, $ext, '_'.hash('crc32', time().mt_rand(1, 1000)));
+    }
+
+    protected function uploadFile($tmpName, $fileFullName)
+    {
+      return  move_uploaded_file($tmpName, $fileFullName);
     }
 
 
