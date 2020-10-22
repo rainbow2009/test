@@ -42,7 +42,7 @@ foreach ($this->styles as $style ):?>
                         </div>
                     </div>
                     <!--кнопка-->
-                    <a href="<?=PATH .base\settings\Settings::get('routes')['admin']['alias']?>" class="vg-element vg-box-shadow sitemap-button">
+                    <a href="<?=PATH .base\settings\Settings::get('routes')['admin']['alias'].'/createsitemap'?>" class="vg-element vg-box-shadow sitemap-button">
                             <span class="vg-text vg-firm-color1">
                                 Create sitemap
                             </span>
