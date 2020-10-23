@@ -15,8 +15,8 @@ class CreateSitemapController extends BaseAdmin
     protected $parsingLogFile = 'parsing_log.txt';
     protected $filesArr = ['jpg', 'png', 'gif', 'jpeg', 'xls', 'xlsx', 'pdf', 'mpeg', 'mp4', 'mp3'];
     protected $filterArr = [
-        'url' => [],
-        'get' => []
+        'url' => ['facebook', 'instagram'],
+        'get' => ['fishop']
     ];
 
     protected function inputData()
@@ -34,8 +34,9 @@ class CreateSitemapController extends BaseAdmin
         }
 
         $this->parsing(SITE_URL);
-        $this->createSitemap();
+        dd(202,$this->linkArr);
 
+        $this->createSitemap();
         !$_SESSION['res']['answer'] && $_SESSION['res']['answer'][] .= '<div class="vg-element vg-padding-in-px" style="color: green">Sitemap создан</div>';
         $this->redirect();
 
@@ -45,9 +46,6 @@ class CreateSitemapController extends BaseAdmin
     protected function parsing($url, $index = 0)
     {
 
-        if ($url === '/' || $url === SITE_URL . '/') {
-            return;
-        }
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -76,18 +74,47 @@ class CreateSitemapController extends BaseAdmin
             return;
         }
 
-        preg_match_all('/<a\s*?[^>]*?href\s*?=(["\'])(.+?)\1[^>]*?>/ui', $out, $links);
+        preg_match_all('/<a\s*?[^>]*?href\s*?=\s*?(["\'])(.+?)\1[^>]*?>/ui', $out, $links);
 
         if ($links[2]) {
             foreach ($links[2] as $link) {
 
-                foreach ($this->filesArr as $ext){
-                    if($ext){
+                if ($link === '/' || $link === SITE_URL . '/') {
+                    dd(1,$link);
 
+                    continue;
+                }
+                foreach ($this->filesArr as $ext) {
+
+                    if ($ext) {
+
+                        $ext = addslashes($ext);
+                        $ext = str_replace('.', '/.', $ext);
+
+                        if (preg_match('/' . $ext . '\s*?$/ui', $link)) {
+                            dd(2,$link);
+
+                            continue 2;
+                        }
                     }
                 }
 
+                if (strpos($link, '/') === 0) {
+                    $link = SITE_URL . $link;
+                }
+                if (!in_array($link, $this->linkArr) && $link !== '#' && strpos($link, SITE_URL) === 0) {
+                    if ($this->filter($link)) {
+                        $this->linkArr[] = $link;
+
+
+                        $this->parsing($link, count($this->linkArr) - 1);
+                    }
+
+
+                }
+
             }
+
         }
 
 
@@ -96,11 +123,38 @@ class CreateSitemapController extends BaseAdmin
     protected function filter($link)
     {
 
+        if ($this->filesArr) {
+            foreach ($this->filterArr as $type => $values) {
+                if ($type) {
+                    foreach ($values as $item) {
+                        $item = str_replace('/', '\/', addslashes($item));
+
+                        if ($type === 'url') {
+
+                            if (preg_match(  '/^[^\?]*' . $item . '.*(\?|$)/ui', $link,$q)) {
+                              return  false;
+                            }
+                        }
+                        if ($type === 'get') {
+                            if (preg_match('/(\?|&amp;|=|&)' . $item . '(=|&amp;|&|$)/ui', $link,$q)) {
+                                return  false;
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        return true;
+
     }
 
     protected function createSitemap()
     {
-
+        return true;
     }
 
 }
