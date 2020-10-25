@@ -5,7 +5,7 @@ namespace base\controller\traits;
 
 trait Singleton
 {
-    static private  $_instance;
+    static private $_instance;
 
     private function __construct()
     {

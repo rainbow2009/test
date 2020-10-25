@@ -13,11 +13,11 @@ require_once("config.php");
 require_once("base/settings/internal_settings.php");
 
 try {
-   
+
     RouteController::instance()->route();
 
 } catch (RouteException $e) {
     exit($e->getMessage());
-}catch (DbException $e) {
+} catch (DbException $e) {
     exit($e->getMessage());
 }

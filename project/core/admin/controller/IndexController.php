@@ -14,8 +14,8 @@ class IndexController extends BaseController
     protected function inputData()
     {
 
-$redirect = PATH.Settings::get('routes')['admin']['alias'].'/show';
-$this->redirect($redirect);
+        $redirect = PATH . Settings::get('routes')['admin']['alias'] . '/show';
+        $this->redirect($redirect);
 
 //        $db = Model::instance();
 //

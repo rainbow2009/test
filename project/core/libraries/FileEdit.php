@@ -87,12 +87,12 @@ class FileEdit
             return $fileName . $fileLastName . '.' . $ext;
         }
 
-        return $this->checkFile($fileName, $ext, '_'.hash('crc32', time().mt_rand(1, 1000)));
+        return $this->checkFile($fileName, $ext, '_' . hash('crc32', time() . mt_rand(1, 1000)));
     }
 
     protected function uploadFile($tmpName, $fileFullName)
     {
-      return  move_uploaded_file($tmpName, $fileFullName);
+        return move_uploaded_file($tmpName, $fileFullName);
     }
 
 

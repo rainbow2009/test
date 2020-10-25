@@ -273,7 +273,7 @@ abstract class BaseModel extends BaseModelMethods
 
     final public function showTables()
     {
-        $query = "SHOW TABLE;";
+        $query = "SHOW TABLES;";
         $tables = $this->query($query);
 
         $tables_arr = [];

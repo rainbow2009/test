@@ -14,7 +14,6 @@ class IndexController extends BaseController
     {
 
 
-
         $name = 'masha';
         $surname = 'vasay';
         $this->name = 'croco';

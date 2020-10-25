@@ -145,9 +145,9 @@ abstract class BaseController
                 foreach (ADMIN_CSS_JS['scripts'] as $item) {
                     $this->scripts[] = PATH . ADMIN_TEMPLATE . trim($item, '/');
                 }
-                
+
             }
-           
+
         }
     }
 }

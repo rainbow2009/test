@@ -2,10 +2,10 @@
 </div><!--.vg-carcass-->
 <div class="vg-modal vg-center">
 
-<?if(isset($_SESSION['res'])){
-    unset($_SESSION['res']);
-}
-?>
+    <? if (isset($_SESSION['res'])) {
+        unset($_SESSION['res']);
+    }
+    ?>
 
 </div>
 </body>

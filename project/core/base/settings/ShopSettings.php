@@ -7,7 +7,7 @@ namespace base\settings;
 class ShopSettings
 {
 
-use BaseSettings;
+    use BaseSettings;
 
     private array $routes = [
         'plugins' => [
@@ -24,7 +24,6 @@ use BaseSettings;
         'text' => ['short', 'price'],
         'textArea' => ['goods_content'],
     ];
-
 
 
 }

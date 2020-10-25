@@ -97,10 +97,9 @@ abstract class BaseModelMethods
                     }
                     $where .= $table . $key . ' LIKE ' . "'" . addslashes($item) . "' $condition";
                 } else {
-
                     if (strpos($item, "SELECT") === 0) {
                         $where .= $table . $key . $operand . ' (' . $item . ")$condition";
-                    } else {
+                    }else {
                         $where .= $table . $key . $operand . "'" . addslashes($item) . "' $condition";
                     }
                 }

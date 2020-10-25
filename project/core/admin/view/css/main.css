@@ -88,7 +88,7 @@ label.vg-element {
 .vg-element {
     display: flex;
     padding: 0.35%;
-   
+
 }
 
 .vg-full {
@@ -379,6 +379,7 @@ label.vg-element {
     .vg-menu a {
         width: 20vw;
     }
+
     .vg-seventy {
         flex-basis: 91.8%;
     }
@@ -387,7 +388,7 @@ label.vg-element {
         flex-basis: 91.8%;
     }
 
-    .vg-twenty .vg-half{
+    .vg-twenty .vg-half {
         flex-basis: 48.5%;
     }
 }
@@ -444,7 +445,7 @@ textarea {
     height: 150px;
 }
 
-.vg-full>textarea {
+.vg-full > textarea {
     height: 200px;
 }
 
@@ -479,7 +480,7 @@ textarea {
     display: block;
 }
 
-.vg-img>div {
+.vg-img > div {
     height: 100%;
 }
 
@@ -520,7 +521,7 @@ textarea {
     color: #eceef2;
 }
 
-.select_wrap{
+.select_wrap {
     margin-top: 10px;
 }
 
@@ -606,7 +607,7 @@ textarea {
     justify-content: center;
 }
 
-.img_settings a{
+.img_settings a {
     text-align: center;
 }
 
@@ -622,8 +623,8 @@ textarea {
     align-items: flex-end;
 }
 
-.thumbnails_wrap{
-    display:none;
+.thumbnails_wrap {
+    display: none;
 }
 
 .toggle_menu, .toggle_menu:before, .toggle_menu:after {
@@ -633,7 +634,7 @@ textarea {
     background-size: 1.5vw .15vw;
     position: relative;
     cursor: pointer;
-    display:none;
+    display: none;
 }
 
 .toggle_menu:before, .toggle_menu:after {
@@ -649,7 +650,7 @@ textarea {
     display: block;
 }
 
-.toggle_menu::after,.toggle_menu::before {
+.toggle_menu::after, .toggle_menu::before {
     top: .3vw;
 }
 
@@ -698,13 +699,13 @@ textarea {
     cursor: pointer;
 }
 
-input[type="checkbox"]:checked+.custom_check::before,
-.params_row input[type="radio"]:checked+.custom_check::before {
+input[type="checkbox"]:checked + .custom_check::before,
+.params_row input[type="radio"]:checked + .custom_check::before {
     -webkit-transform: scale(1);
     transform: scale(1);
 }
 
-input[type="checkbox"]+.custom_check::before {
+input[type="checkbox"] + .custom_check::before {
     -webkit-clip-path: polygon(45% 64%, 84% 14%, 100% 0, 47% 100%, 0 49%, 15% 32%);
     clip-path: polygon(45% 64%, 84% 14%, 100% 0, 47% 100%, 0 49%, 15% 32%);
     height: 100%;
@@ -739,8 +740,8 @@ input[type="checkbox"] {
     background-color: #2f3b4c !important;
 }
 
-.sort_panel{
-    display:none;
+.sort_panel {
+    display: none;
 }
 
 .sitemap-button {
@@ -756,7 +757,7 @@ input[type="checkbox"] {
 
 /*подбор цвета*/
 .modal-palette {
-    display:none;
+    display: none;
     position: fixed;
     /*display: flex;*/
     flex-wrap: wrap;
@@ -802,21 +803,23 @@ input[type="checkbox"] {
 }
 
 /*палитра цвета*/
-#color-picker{
-    margin:25px auto;
-    width:450px;
+#color-picker {
+    margin: 25px auto;
+    width: 450px;
 }
-#color-values{
-    display:block;
-    list-style:none;
-    color:#222;
-    float:left;
-    margin:0 0 0 15px;
+
+#color-values {
+    display: block;
+    list-style: none;
+    color: #222;
+    float: left;
+    margin: 0 0 0 15px;
     padding: 5px;
-    text-align:left;
+    text-align: left;
 }
-#pcr_bg{
-    height:135px;
+
+#pcr_bg {
+    height: 135px;
 }
 
 .picker-wrapper,
@@ -824,12 +827,14 @@ input[type="checkbox"] {
     position: relative;
     float: left;
 }
+
 .picker-indicator,
 .pcr-indicator {
     position: absolute;
     left: 0;
     top: 0;
 }
+
 .picker,
 .pcr {
     cursor: crosshair;
@@ -840,13 +845,16 @@ input[type="checkbox"] {
     width: 200px;
     height: 200px;
 }
+
 .cp-default .pcr {
     width: 30px;
     height: 200px;
 }
+
 .cp-default .pcr-wrapper {
     margin-left: 10px;
 }
+
 .cp-default .picker-indicator {
     width: 5px;
     height: 5px;
@@ -861,6 +869,7 @@ input[type="checkbox"] {
     filter: alpha(opacity=50);
     background-color: white;
 }
+
 .cp-default .pcr-indicator {
     width: 100%;
     height: 10px;
@@ -876,23 +885,25 @@ input[type="checkbox"] {
     border-radius: 4px;
     background-color: white;
 }
+
 /*палитра цвета*/
 
 /*подбор цвета*/
 
-video{
+video {
     max-height: 100%;
 }
 
-.show_element{
+.show_element {
     position: relative;
 }
 
-.admin_modifycation{
+.admin_modifycation {
     position: absolute;
     left: 3px;
     top: 3px;
-    padding:1px;
+    padding: 1px;
     border: 1px solid grey;
     color: #000;
 }
+

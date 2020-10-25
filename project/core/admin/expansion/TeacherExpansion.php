@@ -4,13 +4,15 @@ namespace admin\expansion;
 
 use base\controller\traits\Singleton;
 
-class TeacherExpansion{
+class TeacherExpansion
+{
 
     use Singleton;
 
-public function expansion($args =[]){
-    $this ->title = 'alallala';
+    public function expansion($args = [])
+    {
+        $this->title = 'alallala';
 
-}
+    }
 
 }

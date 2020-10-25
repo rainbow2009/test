@@ -23,7 +23,7 @@ trait BaseTrait
 
     protected function clearNum($num)
     {
-     return   $num = $num * 1;
+        return $num = $num * 1;
     }
 
     protected function isPost()

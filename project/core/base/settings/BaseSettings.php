@@ -8,7 +8,7 @@ use base\controller\traits\Singleton;
 
 trait BaseSettings
 {
-    use Singleton{
+    use Singleton {
         instance as SingletonInstance;
     }
 

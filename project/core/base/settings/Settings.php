@@ -39,63 +39,63 @@ class Settings
         ],
     ];
     private $defaultTable = 'teacher';
-    
+
     private $templateArr = [
         'text' => ['name'],
         'textarea' => ['content'],
-        'select' =>['menu_position','parent_id'],
+        'select' => ['menu_position', 'parent_id'],
         'radio' => ['visible'],
         'img' => ['img'],
-        'gallery_img' =>['gallery_img']
+        'gallery_img' => ['gallery_img']
     ];
-    private $formTemplates = PATH.'admin/view/include/form_templates/';
+    private $formTemplates = PATH . 'admin/view/include/form_templates/';
 
     private $translate = [
-         'name' => ['Название','Не более 100 символов'],
-        'content' => ['Контент','Не более 70 символов'],
-         'menu_position' => ['Название1','Не']
+        'name' => ['Название', 'Не более 100 символов'],
+        'content' => ['Контент', 'Не более 70 символов'],
+        'menu_position' => ['Название1', 'Не']
     ];
 
     private $radio = [
-        'visible' => ['Нет','Да','default'=>'Да']
+        'visible' => ['Нет', 'Да', 'default' => 'Да']
     ];
 
-    private $rootItems=[
-        'name' =>'корневая',
-        'tables' =>['teacher']
+    private $rootItems = [
+        'name' => 'корневая',
+        'tables' => ['teacher']
     ];
 
 
     private $blockNeedle = [
-        'vg-rows' =>[],
-        'vg-img' =>['img'],
-        'vg-content' =>['content',]
+        'vg-rows' => [],
+        'vg-img' => ['img'],
+        'vg-content' => ['content',]
     ];
 
     private $validation = [
-        'name' => ['empty' => true,'trim'=>true],
-        'content' => ['empty' => true,'trim'=>true,'count' =>70],
+        'name' => ['empty' => true, 'trim' => true],
+        'content' => ['empty' => true, 'trim' => true, 'count' => 70],
         'price' => ['int' => true],
-        'login' => ['empty' => true,'trim' =>true],
-        'password' =>['crypt' =>true],
-        'keywords' => ['count' =>4, 'trim' =>true],
-        'description' => ['count' =>160,'trim' =>true]
+        'login' => ['empty' => true, 'trim' => true],
+        'password' => ['crypt' => true],
+        'keywords' => ['count' => 4, 'trim' => true],
+        'description' => ['count' => 160, 'trim' => true]
     ];
 
     private $projectTable = [
         'teacher' => [
             'name' => 'учителя',
-            'img' =>'pages.png'
+            'img' => 'pages.png'
         ],
         'students' => [
             'name' => 'студенты',
-            
-            ]
+
+        ]
     ];
 
-private $expansion ='admin/expansion/';
+    private $expansion = 'admin/expansion/';
 
-private  $messages ='base/messages/';
+    private $messages = 'base/messages/';
 
     static public function get($property)
     {
@@ -125,9 +125,9 @@ private  $messages ='base/messages/';
     {
         $arrays = func_get_args();
         $base = array_shift($arrays);
-       
+
         foreach ($arrays as $array) {
-           
+
             foreach ($array as $key => $value) {
 
                 if (is_array($value) && is_array($base[$key])) {

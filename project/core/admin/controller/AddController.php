@@ -10,7 +10,7 @@ class AddController extends BaseAdmin
     /**
      * @var string
      */
-    protected  $action = 'add';
+    protected $action = 'add';
 
     protected function inputData()
     {
