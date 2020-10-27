@@ -105,7 +105,6 @@ abstract class BaseModel extends BaseModelMethods
     {
 
         $fields = $this->createFields($set, $table);
-
         $where = $this->createWhere($set, $table);
         $join_arr = $this->createJoin($set, $table);
 

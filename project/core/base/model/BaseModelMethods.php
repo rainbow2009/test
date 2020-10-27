@@ -13,11 +13,12 @@ abstract class BaseModelMethods
     {
 
         $set['fields'] = (is_array($set['fields']) && !empty($set['fields']))
-            ? $set['fields'] : '*';
+            ? $set['fields'] : ['*'];
         $table = ($table && !$set['no_concat']) ? $table . '.' : '';
         $fields = '';
 
         if (is_array($set['fields'])) {
+
             foreach ($set['fields'] as $field) {
                 $fields .= $table . $field . ',';
             }
