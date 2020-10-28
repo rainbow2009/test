@@ -18,8 +18,8 @@ class CreateSitemapController extends BaseAdmin
     protected $parsingLogFile = 'parsing_log.txt';
     protected $filesArr = ['jpg', 'png', 'gif', 'jpeg', 'xls', 'xlsx', 'pdf', 'mpeg', 'mp4', 'mp3'];
     protected $filterArr = [
-        'url' => ['facebook', 'instagram'],
-        'get' => ['fishop']
+        'url' => ['facebook', 'instagram','wp-login'],
+        'get' => ['fishop', 'add', 'remove_item', 'add-to-cart']
     ];
 
     protected function inputData($links_counter = 1)
@@ -38,11 +38,15 @@ class CreateSitemapController extends BaseAdmin
         }
 
         set_time_limit(0);
-        $reserve = $this->model->get('parsing_table')[0];
+        $reserve = $this->model->get('parsing_table', [
+            'fields' => ['all_links', 'temp_links']
+        ])[0];
         foreach ($reserve as $name => $item) {
-            if ($item) {
+
+            if (!empty($item)) {
                 $this->$name = json_decode($item);
             } else {
+
                 $this->$name = [SITE_URL];
             }
         }
@@ -50,6 +54,8 @@ class CreateSitemapController extends BaseAdmin
 
         while ($this->temp_links) {
             $temp_links_counter = count($this->temp_links);
+
+
             $links = $this->temp_links;
             $this->temp_links = [];
 
@@ -82,14 +88,24 @@ class CreateSitemapController extends BaseAdmin
                     'all_links' => json_encode($this->all_links)
                 ]
             ]);
+            dd($this->temp_links);
 
         }
         $this->model->update('parsing_table', [
             'fields' => [
-                'temp_links' => ' ',
-                'all_links' => ' '
+                'temp_links' => null,
+                'all_links' => null
             ]
         ]);
+
+        if ($this->all_links) {
+            foreach ($this->all_links as $key => $val) {
+                if (!$this->filter($val)) {
+                    unset($this->all_links[$key]);
+                }
+            }
+        }
+
 
         dd(202, $this->all_links);
 
@@ -150,10 +166,11 @@ class CreateSitemapController extends BaseAdmin
             curl_close($curl[$i]);
 
             if (!preg_match("/Content-Type:\s+text\/html/ui", $result[$i])) {
-
+                $this->cancel(0, 'Incorrect content type ' . $url);
+                continue;
             }
 
-            if (!preg_match("/HTTP\/\d\.?\d?\s+20\d/ui", $out)) {
+            if (!preg_match("/HTTP\/\d\.?\d?\s+20\d/ui", $result[$i])) {
 
                 $this->cancel(0, 'Incorrect server code ' . $url);
                 continue;
@@ -211,9 +228,9 @@ class CreateSitemapController extends BaseAdmin
     {
         $tables = $this->model->showTables();
         if (!in_array('parsing_table', $tables)) {
-            $query = 'CREATE TABLE parsing_table (id int NOT NULL AUTO_INCREMENT,all_links text, temp_links text, PRIMARY KEY (id))';
+            $query = 'CREATE TABLE parsing_table (id int NOT NULL AUTO_INCREMENT,all_links longtext, temp_links longtext, PRIMARY KEY (id))';
             if (!$this->model->query($query, 'c') ||
-                !$this->model->add('parsing_table', ['fields' => ['all_links' => ' ', 'temp_links' => ' ']])
+                !$this->model->add('parsing_table', ['fields' => ['all_links' => null, 'temp_links' => null]])
             ) {
                 return false;
             }
@@ -245,8 +262,7 @@ class CreateSitemapController extends BaseAdmin
     {
 
         if ($content) {
-            preg_match_all('/<a\s*?[^>]*?href\s*?=\s*?(["\'])(.+?)\1[^>]*?>/ui', $out, $links);
-
+            preg_match_all('/<a\s*?[^>]*?href\s*?=\s*?(["\'])(.+?)\1[^>]*?>/ui', $content, $links);
             if ($links[2]) {
                 foreach ($links[2] as $link) {
 
@@ -277,13 +293,12 @@ class CreateSitemapController extends BaseAdmin
                     if (!in_array($link, $this->all_links) && !preg_match('/^(' . $site_url . ')?\/?#[^\/]*?$/ui',
                             $link)
                         && strpos($link, SITE_URL) === 0) {
-                        if ($this->filter($link)) {
-                            $this->all_links[] = $link;
+
+                        $this->all_links[] = $link;
 
 
-                            $this->parsing($link, count($this->all_links) - 1);
-                        }
 
+                        $this->temp_links =  $this->all_links;
 
                     }
 
