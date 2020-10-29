@@ -7,11 +7,9 @@
     <meta type="description" content="...">
     <title>Document</title>
     <?php
+    $this->getStyles();
+    ?>
 
-
-    foreach ($this->styles as $style):?>
-        <link rel="stylesheet" href="<?= $style ?>">
-    <?php endforeach; ?>
 </head>
 <body>
 <div class="vg-carcass vg-hide">

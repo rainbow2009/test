@@ -32,6 +32,9 @@ abstract class BaseController
 
     protected $userId;
 
+    protected $data;
+
+
     public function route()
     {
 
