@@ -1,5 +1,4 @@
 const Ajax = (set) => {
-
     if (typeof set === "undefined") {
         set = {};
     }
@@ -28,6 +27,7 @@ const Ajax = (set) => {
     }
 
     return new Promise((resolve, reject) => {
+
         let xhr = new XMLHttpRequest();
         xhr.open(set.type, set.url, true);
 
@@ -41,20 +41,24 @@ const Ajax = (set) => {
                 }
             }
         }
-        if (!contentType){
-            xhr.setRequestHeader('Content-Type','aplication/x-www-form-urlencoded; charset=UTF-8');
-            xhr.onload = function (){
-                if(this.status >= 200 && this.status <300){
-                    if(/fatal\s+?error/ui.test(this.response)){
+        if (!contentType) {
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            xhr.onload = function () {
+                if (this.status >= 200 && this.status < 300) {
+                    if (/fatal\s+?error/ui.test(this.response)) {
                         reject(this.response);
                     }
 
-                    resolve(this.response)
+                    resolve(this.response);
                 }
+                reject(this.response);
+            }
+            xhr.onerror = function () {
+                reject(this.response);
             }
         }
+        body
+        xhr.send(body);
     });
-    console.log(set)
 }
 
-Ajax();
