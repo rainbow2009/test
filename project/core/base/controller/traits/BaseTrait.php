@@ -23,6 +23,7 @@ trait BaseTrait
 
     protected function clearNum($num)
     {
+
         return $num = $num * 1;
     }
 

@@ -41,4 +41,30 @@ class Crypt
         return false;
     }
 
+    protected function cryptCombine($str, $iv, $hmac)
+    {
+        $new_str = '';
+        $str_len = strlen($str);
+        $counter = (int)ceil(strlen(CRYPT_KEY) / ($str_len + strlen($hmac)));
+        $progress = 1;
+
+        if ($counter >= $str_len) $counter = 1;
+        
+        for ($i = 0; $i < $str_len; $i++) {
+
+            if ($counter < $str_len) {
+
+                if ($counter === $i) {
+                    $new_str .= substr($iv, $progress - 1, 1);
+                    $progress++;
+                    $counter += $progress;
+                }
+
+            } else {
+                break;
+            }
+            $new_str .= substr($str, $i, 1);
+        }
+    }
+
 }

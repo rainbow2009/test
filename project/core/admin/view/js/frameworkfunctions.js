@@ -11,15 +11,16 @@ const Ajax = (set) => {
 
     let body = '';
     if (typeof set.data === "undefined" || set.data) {
+
         for (let i in set.data) {
-            body += '&' + i + set.data[i];
+            body += '&' + i +'=' + set.data[i];
         }
         body = body.substr(1);
     }
 
     if (typeof ADMIN_MODE !== "undefined") {
         body += body ? '&' : '';
-        body += "ADMIN_BODY=" + ADMIN_MODE;
+        body += "ADMIN_MODE=" + ADMIN_MODE;
     }
     if (set.type === "GET") {
         set.url += '?' + body;
@@ -43,6 +44,7 @@ const Ajax = (set) => {
         }
         if (!contentType) {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.onload = function () {
                 if (this.status >= 200 && this.status < 300) {
                     if (/fatal\s+?error/ui.test(this.response)) {
@@ -57,7 +59,6 @@ const Ajax = (set) => {
                 reject(this.response);
             }
         }
-        body
         xhr.send(body);
     });
 }

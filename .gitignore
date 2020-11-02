@@ -21,3 +21,4 @@ docker-compose.yml
 *~
 log
 project/core/userfiles
+project/core/sitemap.xml

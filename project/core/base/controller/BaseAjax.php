@@ -13,7 +13,6 @@ class BaseAjax extends BaseController
 
         $route = Settings::get('routes');
         $controller = $route['user']['path'] . 'AjaxController';
-
         $data = $this->isPost() ? $_POST : $_GET;
 
         if (isset($data['ADMIN_MODE'])) {
@@ -21,9 +20,10 @@ class BaseAjax extends BaseController
             $controller = $route['admin']['path'] . 'AjaxController';
 
         }
+        $controller = str_replace('/','\\',$controller);
         $ajax = new $controller;
-        $ajax->createAjaxData($data);
 
+        $ajax->createAjaxData($data);
         return $ajax->ajax();
     }
 

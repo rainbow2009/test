@@ -11,8 +11,7 @@ require_once('libraries/helpers.php');
 require_once("config.php");
 require_once("base/settings/internal_settings.php");
 
-if($_POST) exit('dsad   ');
-//dd($_POST,$_GET);
+
 try {
 
     BaseRoute::routeDirection();
