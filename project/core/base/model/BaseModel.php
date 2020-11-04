@@ -108,16 +108,23 @@ abstract class BaseModel extends BaseModelMethods
         $where = $this->createWhere($set, $table);
         $join_arr = $this->createJoin($set, $table);
 
-        $fields .= $join_arr['fields'];
+        $fields .= rtrim($join_arr['fields'], ',');
         $join = $join_arr['join'];
-        $where .= $join_arr['where'];
-
+        $where .= rtrim($join_arr['where'], ',');
 
         $order = $this->createOrder($set, $table);
         $limit = $set['limit'] ? "LIMIT " . $set['limit'] : '';
 
         $query = "SELECT $fields FROM $table $join $where $order $limit";
-        return $this->query($query);
+        $res = $this->query($query);
+dd($fields);
+        if (isset($set['join_structure']) && $set['join_structure'] && $res) {
+                    $res = $this->joinStructure($res, $table);
+        }
+
+
+        return $res;
+
     }
 
     final public function add($table, $set = [])
@@ -212,7 +219,7 @@ abstract class BaseModel extends BaseModelMethods
      * ]
      */
 
-    final public function delete($table, $set)
+    final public function delete($table, $set = [])
     {
         $table = trim($table);
         $where = $this->createWhere($set, $table);
@@ -253,20 +260,39 @@ abstract class BaseModel extends BaseModelMethods
     final public function showColumns($table)
     {
 
-        $query = "SHOW COLUMNS FROM $table";
+        if (!isset($this->tableRows[$table]) || !$this->tableRows[$table]) {
 
-        $res = $this->query($query);
+            $query = "SHOW COLUMNS FROM $table";
 
-        $columns = [];
+            $res = $this->query($query);
 
-        foreach ($res as $row) {
-            $columns[$row['Field']] = $row;
-            if ($row['Key'] === "PRI") {
-                $columns['id_row'] = $row['Field'];
+            $this->tableRows[$table] = [];
+
+            if ($res) {
+
+                foreach ($res as $row) {
+                    $this->tableRows[$table][$row['Field']] = $row;
+
+                    if ($row['Key'] === "PRI") {
+
+                        if (!isset($this->tableRows[$table]['id_row'])) {
+
+                            $this->tableRows[$table]['id_row'] = $row['Field'];
+
+                        } else {
+
+                            if (!isset($this->tableRows[$table]['multi_id_row'])) {
+                                $this->tableRows[$table]['multi_id_row'] = $this->tableRows[$table]['id_row'];
+                            }
+                            $this->tableRows[$table]['multi_id_row'][] = $row['Field'];
+                        }
+                    }
+                }
             }
         }
 
-        return $columns;
+
+        return $this->tableRows[$table];
 
     }
 
@@ -282,6 +308,54 @@ abstract class BaseModel extends BaseModelMethods
             }
         }
         return $tables_arr;
+    }
+
+    protected function joinStructure($res, $table)
+    {
+
+        $join_arr = [];
+        $id_row = $this->tableRows[$table]['id_row'];
+dd($res);
+        foreach ($res as $val) {
+            if ($val) {
+                if (!isset($join_arr[$val[$id_row]])) {
+                    $join_arr[$val[$id_row]] = [];
+                }
+
+                foreach ($val as $key => $item) {
+
+                    if (preg_match('/TABLE(.+)?TABLE/u', $key, $matches)) {
+                        $table_name_normal = $matches[0];
+
+                        if (!isset($this->tableRows[$table_name_normal]['multi_id_row'])) {
+
+                            $join_id_row = $val[$matches[0]] . '_' . $this->tableRows[$table_name_normal]['id_row'];
+                            dd($val,$matches[0]);
+
+                        } else {
+
+                            $join_id_row = '';
+
+                            foreach ($this->tableRows[$table_name_normal]['multi_id_row'] as $multi) {
+                                $join_id_row .= $val[$matches[0] . '_' . $multi];
+
+                            }
+                        }
+                        $row = preg_replace('/TABLE(.+)?TABLE_/u', '', $key);
+
+                        if ($join_id_row && !isset($join_arr[$val[$id_row]]['join'][$table_name_normal][$join_id_row][$row])) {
+                            dd([$table_name_normal],[$join_id_row]);
+                            $join_arr[$val[$id_row]]['join'][$table_name_normal][$join_id_row][$row] = $item;
+
+                        }
+                        continue;
+
+                    }
+                    $join_arr[$val[$id_row]][$key] = $item;
+                }
+            }
+        }
+        return $join_arr;
     }
 
 
