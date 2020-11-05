@@ -37,6 +37,7 @@ abstract class BaseModelMethods
                 foreach ($this->tableRows[$table] as $key => $item) {
                     if ($key !== 'id_row' && $key !== 'multi_id_row') {
                         $fields .= $concat_table . $key . ' as TABLE' . $table . 'TABLE_' . $key . ',';
+
                     }
                 }
             }
@@ -53,15 +54,22 @@ abstract class BaseModelMethods
 
                 if (!empty($field)) {
 
-                    if ($join && $join_structure && !preg_match('/\s+as\s+/i', $field)) {
+                    if ($join && $join_structure) {
 
-                        $field .= $concat_table . $field . ' as TABLE' . $table . 'TABLE_' . $field . ',';
+                        if (preg_match('/^(.+)?\s+as\s+(.+)/i', $field, $matches)) {
+
+                            $fields .= $concat_table . $matches[1] . ' as TABLE' . $table . 'TABLE_' . $matches[2] . ',';
+
+                        } else {
+
+                            $fields .= $concat_table . $field . ' as TABLE' . $table . 'TABLE_' . $field . ',';
+
+                        }
 
 
                     } else {
 
-                        $field .= $concat_table . $field . ',';
-                        dd($field,1);
+                        $fields .= $concat_table . $field . ',';
 
                     }
                 }
@@ -72,6 +80,7 @@ abstract class BaseModelMethods
 
                 } else {
                     $fields .= $concat_table . $this->tableRows[$table]['id_row'] . ',';
+
                 }
             }
         }
@@ -133,7 +142,7 @@ abstract class BaseModelMethods
                             $in_str .= "'" . addslashes(trim($valeu)) . "',";
                         }
                     }
-                    $where .= $table . $key . ' ' . $operand . ' (' . rtrim($in_str,',') . ') ' . $condition;
+                    $where .= $table . $key . ' ' . $operand . ' (' . rtrim($in_str, ',') . ') ' . $condition;
                 } elseif (strpos($operand, "LIKE") !== false) {
 
                     $like_tamplate = explode('%', $operand);
@@ -417,4 +426,26 @@ abstract class BaseModelMethods
         return rtrim($update, ',');
     }
 
+    protected function createTableAlias($table)
+    {
+        $arr = [];
+
+        if (preg_match('/\s+/i', $table)) {
+
+            $table = preg_replace('/\s{2,}/', ' ', $table);
+
+            $table_name = explode(' ', $table);
+
+            $arr['table'] = trim($table_name[0]);
+            $arr['alias'] = trim($table_name[1]);
+
+
+        } else {
+
+            $arr['table'] = $arr['alias'] = $table;
+
+        }
+
+        return $arr;
+    }
 }

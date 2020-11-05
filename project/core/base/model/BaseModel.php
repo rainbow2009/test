@@ -117,9 +117,9 @@ abstract class BaseModel extends BaseModelMethods
 
         $query = "SELECT $fields FROM $table $join $where $order $limit";
         $res = $this->query($query);
-dd($fields);
         if (isset($set['join_structure']) && $set['join_structure'] && $res) {
-                    $res = $this->joinStructure($res, $table);
+
+            $res = $this->joinStructure($res, $table);
         }
 
 
@@ -262,35 +262,50 @@ dd($fields);
 
         if (!isset($this->tableRows[$table]) || !$this->tableRows[$table]) {
 
-            $query = "SHOW COLUMNS FROM $table";
+
+            $checkTable = $this->createTableAlias($table);
+
+            if ($this->tableRows[$checkTable['table']]) {
+
+                return $this->tableRows[$checkTable['alias']] = $this->tableRows[$checkTable['table']];
+
+            }
+
+            $query = "SHOW COLUMNS FROM {$checkTable['table']}";
 
             $res = $this->query($query);
 
-            $this->tableRows[$table] = [];
+            $this->tableRows[$checkTable['table']] = [];
 
             if ($res) {
 
                 foreach ($res as $row) {
-                    $this->tableRows[$table][$row['Field']] = $row;
+                    $this->tableRows[$checkTable['table']][$row['Field']] = $row;
 
                     if ($row['Key'] === "PRI") {
 
-                        if (!isset($this->tableRows[$table]['id_row'])) {
+                        if (!isset($this->tableRows[$checkTable['table']]['id_row'])) {
 
-                            $this->tableRows[$table]['id_row'] = $row['Field'];
+                            $this->tableRows[$checkTable['table']]['id_row'] = $row['Field'];
 
                         } else {
 
-                            if (!isset($this->tableRows[$table]['multi_id_row'])) {
-                                $this->tableRows[$table]['multi_id_row'] = $this->tableRows[$table]['id_row'];
+                            if (!isset($this->tableRows[$checkTable['table']]['multi_id_row'])) {
+                                $this->tableRows[$checkTable['table']]['multi_id_row'][] = $this->tableRows[$checkTable['table']]['id_row'];
                             }
-                            $this->tableRows[$table]['multi_id_row'][] = $row['Field'];
+                            $this->tableRows[$checkTable['table']]['multi_id_row'][] = $row['Field'];
+
                         }
                     }
                 }
             }
         }
 
+        if (isset($checkTable) && $checkTable['table'] !== $checkTable['alias']) {
+
+
+            return $this->tableRows[$checkTable['alias']] = $this->tableRows[$checkTable['table']];
+        }
 
         return $this->tableRows[$table];
 
@@ -315,7 +330,7 @@ dd($fields);
 
         $join_arr = [];
         $id_row = $this->tableRows[$table]['id_row'];
-dd($res);
+
         foreach ($res as $val) {
             if ($val) {
                 if (!isset($join_arr[$val[$id_row]])) {
@@ -325,12 +340,12 @@ dd($res);
                 foreach ($val as $key => $item) {
 
                     if (preg_match('/TABLE(.+)?TABLE/u', $key, $matches)) {
-                        $table_name_normal = $matches[0];
+
+                        $table_name_normal = $matches[1];
 
                         if (!isset($this->tableRows[$table_name_normal]['multi_id_row'])) {
 
-                            $join_id_row = $val[$matches[0]] . '_' . $this->tableRows[$table_name_normal]['id_row'];
-                            dd($val,$matches[0]);
+                            $join_id_row = $val[$matches[0] . '_' . $this->tableRows[$table_name_normal]['id_row']];
 
                         } else {
 
@@ -344,7 +359,6 @@ dd($res);
                         $row = preg_replace('/TABLE(.+)?TABLE_/u', '', $key);
 
                         if ($join_id_row && !isset($join_arr[$val[$id_row]]['join'][$table_name_normal][$join_id_row][$row])) {
-                            dd([$table_name_normal],[$join_id_row]);
                             $join_arr[$val[$id_row]]['join'][$table_name_normal][$join_id_row][$row] = $item;
 
                         }

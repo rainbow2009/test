@@ -32,13 +32,17 @@ class IndexController extends BaseController
 
         $model = Model::instance();
         $res = $model->get('teacher', [
-            'where' => ['id' => '1,2,3'],
+            'where' => ['id' => '2,3'],
             'operand' => ['IN'],
             'join' => [
-                'student_teacher' => ['on' => ['id', 'teacher']],
-                'students' => [
-                    'fields' => ['name as student_name'],
-                    'on' => [ 'student','id']
+                'student_teacher f' => ['on' => ['id', 'teacher']],
+                'students f' => [
+                    'fields' => ['name as student_name', 'content'],
+                    'on' => ['student', 'id']
+                ],
+                [
+                    'table' => 'students',
+                    'on' =>['parent_id','id']
                 ]
             ],
             'join_structure' => true
