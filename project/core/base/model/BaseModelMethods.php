@@ -76,7 +76,9 @@ abstract class BaseModelMethods
             }
             if (!$id_fields && $join_structure) {
                 if ($join) {
+
                     $fields .= $concat_table . $this->tableRows[$table]['id_row'] . ' as TABLE' . $table . 'TABLE_' . $this->tableRows[$table]['id_row'] . ',';
+                    dd($concat_table);
 
                 } else {
                     $fields .= $concat_table . $this->tableRows[$table]['id_row'] . ',';
@@ -84,14 +86,14 @@ abstract class BaseModelMethods
                 }
             }
         }
-
         return $fields;
 
     }
 
     final protected function createWhere($set, $table = false, $instruction = "WHERE")
     {
-        $table = ($table && !$set['no_concat']) ? $table . '.' : '';
+        $table = ($table && (!isset($set['no_concat']) && !$set['no_concat']))
+            ? $this->createTableAlias($table)['alias'] . '.' : '';
 
         $where = '';
 
@@ -157,13 +159,12 @@ abstract class BaseModelMethods
                         }
                     }
                     $where .= $table . $key . ' LIKE ' . "'" . addslashes($item) . "' $condition";
+                } elseif (strpos($item, "SELECT") === 0) {
+                    $where .= $table . $key . $operand . ' (' . $item . ")$condition";
                 } else {
-                    if (strpos($item, "SELECT") === 0) {
-                        $where .= $table . $key . $operand . ' (' . $item . ")$condition";
-                    } else {
-                        $where .= $table . $key . $operand . "'" . addslashes($item) . "' $condition";
-                    }
+                    $where .= $table . $key . $operand . "'" . addslashes($item) . "' $condition";
                 }
+
             }
             $where = substr($where, 0, strrpos($where, $condition));
         }
@@ -174,12 +175,17 @@ abstract class BaseModelMethods
     final protected function createOrder($set, $table = false)
     {
 
-        $table = ($table && !$set['no_concat']) ? $table . '.' : '';
+        $table = ($table && (!isset($set['no_concat']) && !$set['no_concat']))
+            ? $this->createTableAlias($table)['alias'] . '.' : '';
         $order_by = '';
 
-        if (is_array($set['order']) && !empty($set['order'])) {
-            $set['order_direction'] = (is_array($set['order_direction']) && !empty($set['order_direction']))
-                ? $set['order_direction'] : ["ASC"];
+        if (isset($set['order']) && $set['order']) {
+
+            $set['order'] = (array)$set['order'];
+
+            $set['order_direction'] = (isset($set['order_direction']) && $set['order_direction'])
+                ? (array)$set['order_direction'] : ["ASC"];
+
             $order_by = "ORDER BY ";
             $direct_count = 0;
 
@@ -194,8 +200,10 @@ abstract class BaseModelMethods
                     $order_direction = strtoupper($set['order_direction'][$direct_count - 1]);
 
                 }
-                if (is_int($order)) {
 
+                if (in_array($order, $this->sqlFunct)) {
+                    $order_by .= $order . ',';
+                } elseif (is_int($order)) {
                     $order_by .= $order . ' ' . $order_direction . ',';
                 } else {
                     $order_by .= $table . $order . ' ' . $order_direction . ',';
@@ -230,22 +238,28 @@ abstract class BaseModelMethods
                     }
                 }
 
+                $concatTable = $this->createTableAlias($table);
+
                 if ($join) {
                     $join .= " ";
                 }
-                if ($value['on']) {
-                    $join_fields = "";
-                    switch (2) {
-                        case isset($item['on']['fields']) && count($value['on']['fields']);
-                            $join_fields = $value['on']['fields'];
-                            break;
-                        case (is_array($value['on']) && count($value['on']));
-                            $join_fields = $value['on'];
-                            break;
 
-                        default:
-                            continue 2;
-                            break;
+                if (isset($value['on']) && $value['on']) {
+
+                    $join_fields = "";
+
+                    if (isset($value['on']['fields']) && is_array($value['on']['fields'])
+                        && count($value['on']['fields']) == 2) {
+
+                        $join_fields = $value['on']['fields'];
+
+                    } elseif (count($value['on']) === 2) {
+
+                        $join_fields = $value['on'];
+
+                    }else{
+
+                        continue;
 
                     }
 
@@ -258,12 +272,14 @@ abstract class BaseModelMethods
                     $join .= $key . " ON ";
 
                     if ($value["on"]["table"]) {
-                        $join .= $value["on"]["table"];
+                        $join_temp_table = $value["on"]["table"];
                     } else {
-                        $join .= $join_table;
+                        $join_temp_table = $join_table;
                     }
+                    $join .= $this->createTableAlias($join_temp_table);
 
-                    $join .= '.' . $join_fields[0] . '=' . $key . '.' . $join_fields[1];
+                    $join .= '.' . $join_fields[0] . '=' . $concatTable . '.' . $join_fields[1];
+
                     $join_table = $key;
 
                     if ($new_where) {
