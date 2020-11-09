@@ -89,7 +89,6 @@ class ShowController extends BaseAdmin
             }
         }
 
-
         $this->data = $this->model->get($this->table, [
             'fields' => $fields,
             'order' => $order,

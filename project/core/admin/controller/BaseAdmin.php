@@ -18,7 +18,7 @@ abstract class BaseAdmin extends BaseController
     protected $title;
 
     protected $fileArr;
-
+    protected $alias;
 
     protected $table;
     protected $columns;
@@ -27,8 +27,9 @@ abstract class BaseAdmin extends BaseController
     protected $adminPath;
 
     protected $translate;
+
     protected $messages;
-    protected $alias;
+    protected $settings;
 
     protected $blocks = [];
 
@@ -161,7 +162,6 @@ abstract class BaseAdmin extends BaseController
             return false;
 
         }
-        return false;
     }
 
     protected function createOutputData($settings = false)
@@ -503,5 +503,52 @@ abstract class BaseAdmin extends BaseController
         return false;
     }
 
+    protected function createOrderData($table)
+    {
+        $columns = $this->model->showColumns($table);
+
+        if (!$columns) throw new RouteException('table columns exist ' . $table);
+
+        $name = '';
+
+        if ($columns['name']) {
+            $order_name = $name = 'name';
+        } else {
+            foreach ($columns as $key => $val) {
+                if (strpos($key, 'name') !== false) {
+                    $order_name = $key;
+                    $name = $key . ' as name';
+                }
+            }
+            if (!$name) $name = $columns['id_row'] . ' as name';
+        }
+
+        $parent_id = '';
+        $order = [];
+
+        if ($columns['parent_id']) {
+            $order[] = $parent_id = 'parent_id';
+        }
+
+        if ($columns['menu_position']) {
+            $order[] = 'menu_position';
+        } else {
+            $order[] = $order_name;
+        }
+
+        return compact('name', 'parent_id', 'order', 'columns');
+    }
+
+    protected function createManyToMany($settings = false)
+    {
+
+        if (!$settings) $settings = $this->settings ?: Settings::instance();
+
+        $manyToMany = $settings::get('manyToMany');
+        $blocks = $settings::get('blockNeedle');
+        if ($manyToMany) {
+    
+        }
+    }
 
 }

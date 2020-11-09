@@ -44,6 +44,7 @@ class Settings
         'text' => ['name'],
         'textarea' => ['content'],
         'select' => ['menu_position', 'parent_id'],
+        'checkboxlist' =>['students '],
         'radio' => ['visible'],
         'img' => ['img'],
         'gallery_img' => ['gallery_img']
@@ -65,6 +66,11 @@ class Settings
         'tables' => ['teacher']
     ];
 
+    private $manyToMany = [
+        'teacher_student' =>[
+            'teacher','students'
+        ] //'type' => 'child' || 'root'
+    ];
 
     private $blockNeedle = [
         'vg-rows' => [],
