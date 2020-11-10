@@ -44,7 +44,7 @@ class Settings
         'text' => ['name'],
         'textarea' => ['content'],
         'select' => ['menu_position', 'parent_id'],
-        'checkboxlist' =>['students '],
+        'checkboxlist' =>['students'],
         'radio' => ['visible'],
         'img' => ['img'],
         'gallery_img' => ['gallery_img']
