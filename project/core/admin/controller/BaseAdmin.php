@@ -507,7 +507,9 @@ abstract class BaseAdmin extends BaseController
     {
         $columns = $this->model->showColumns($table);
 
-        if (!$columns) throw new RouteException('table columns exist ' . $table);
+        if (!$columns) {
+            throw new RouteException('table columns exist ' . $table);
+        }
 
         $name = '';
 
@@ -520,7 +522,9 @@ abstract class BaseAdmin extends BaseController
                     $name = $key . ' as name';
                 }
             }
-            if (!$name) $name = $columns['id_row'] . ' as name';
+            if (!$name) {
+                $name = $columns['id_row'] . ' as name';
+            }
         }
 
         $parent_id = '';
@@ -542,12 +546,14 @@ abstract class BaseAdmin extends BaseController
     protected function createManyToMany($settings = false)
     {
 
-        if (!$settings) $settings = $this->settings ?: Settings::instance();
+        if (!$settings) {
+            $settings = $this->settings ?: Settings::instance();
+        }
 
         $manyToMany = $settings::get('manyToMany');
         $blocks = $settings::get('blockNeedle');
         if ($manyToMany) {
-    
+
         }
     }
 
