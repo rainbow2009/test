@@ -100,7 +100,7 @@ abstract class BaseModelMethods
                 }
             }
         }
-        return trim($fields,',') ;
+        return $fields;
 
     }
 

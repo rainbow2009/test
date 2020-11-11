@@ -115,7 +115,7 @@ abstract class BaseModel extends BaseModelMethods
 
         $order = $this->createOrder($set, $table);
         $limit = $set['limit'] ? "LIMIT " . $set['limit'] : '';
-
+        $fields =trim($fields,',');
         $query = "SELECT $fields FROM $table $join $where $order $limit";
         $res = $this->query($query);
         if (isset($set['join_structure']) && $set['join_structure'] && $res) {

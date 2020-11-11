@@ -26,7 +26,7 @@ class AddController extends BaseAdmin
         $this->createForeignData();
         $this->createMenuPosition();
         $this->checkPost();
-
+        $this->createManyToMany();
 //        $this->data=[
 //            'name' =>'Man',
 //            'img' => '1.png',
@@ -74,7 +74,7 @@ class AddController extends BaseAdmin
         }
 
         $foreign = $this->model->get($arr['REFERENCED_TABLE_NAME'], [
-            'fields' => [$arr['REFERENCED_COLUMN_NAME'] . ' as id', $orderData['name'],$orderData['parent_id']],
+            'fields' => [$arr['REFERENCED_COLUMN_NAME'] . ' as id', $orderData['name'], $orderData['parent_id']],
             'where' => $where,
             'operand' => $operand,
             'order' => $orderData['order']
