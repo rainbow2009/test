@@ -666,7 +666,7 @@ abstract class BaseAdmin extends BaseController
                                 }
                             }
 
-                            if ($parent === $tables[$otherKey]){
+                            if ($parent === $tables[$otherKey]) {
 
                                 $data = $this->model->get($tables[$otherKey], [
                                     'fields' => [
@@ -677,11 +677,54 @@ abstract class BaseAdmin extends BaseController
                                     'order' => $orderData['order']
                                 ]);
 
-                                if ($data){
+                                if ($data) {
+
+                                    while (($key = key($data)) !== null) {
+
+                                        if (!$data[$key]['parent_id']) {
+                                            $this->foreignData[$tables[$otherKey]][$data[$key]['id']]['name'] = $data[$key['name']];
+                                            unset($data[$key]);
+                                            reset($data);
+                                            continue;
+                                        } else {
+
+                                            if ($this->foreignData[$tables[$otherKey]][$data[$key][$orderData['parent_id']]]) {
+
+                                                $this->foreignData[$tables[$otherKey]][$data[$key][$orderData['parent_id']]]['sub'][$data][$key]['id'] = $data[$key];
+
+                                                if (in_array($data[$key]['id'], $foreign)) {
+                                                    $this->data[$tables[$otherKey]][$data[$key][$orderData['parent_id']]][] = $data[$key]['id'];
+                                                }
+
+                                                unset($data[$key]);
+                                                reset($data);
+                                                continue;
+                                            } else {
+                                                foreach ($this->foreignData[$tables[$otherKey]] as $id => $val) {
+
+                                                    $parent_id = $data[$key][$orderData['parent_id']];
+
+                                                    if (isset($val['sub']) && $val['sub'] && isset($val['sub'][$parent_id])) {
+                                                        $this->foreignData[$tables[$otherKey]][$id]['sub'][$data[$key]['id']] = $data[$key];
+
+                                                        if (in_array($data[$key]['id'], $foreign)) {
+                                                            $this->data[$tables[$otherKey]][$id][] = $data[$key]['id'];
+                                                        }
+
+                                                        unset($data[$key]);
+                                                        reset($data);
+                                                        continue 2 ;
+                                                    }
+                                                }
+                                            }
+                                            next($data);
+
+                                        }
+                                    }
 
                                 }
 
-                            }else{
+                            } else {
 
 
                             }
