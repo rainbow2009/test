@@ -507,7 +507,9 @@ abstract class BaseAdmin extends BaseController
     {
         $columns = $this->model->showColumns($table);
 
-        if (!$columns) throw new RouteException('table columns exist ' . $table);
+        if (!$columns) {
+            throw new RouteException('table columns exist ' . $table);
+        }
 
         $name = '';
 
@@ -520,7 +522,9 @@ abstract class BaseAdmin extends BaseController
                     $name = $key . ' as name';
                 }
             }
-            if (!$name) $name = $columns['id_row'] . ' as name';
+            if (!$name) {
+                $name = $columns['id_row'] . ' as name';
+            }
         }
 
         $parent_id = '';
@@ -542,10 +546,13 @@ abstract class BaseAdmin extends BaseController
     protected function createManyToMany($settings = false)
     {
 
-        if (!$settings) $settings = $this->settings ?: Settings::instance();
+        if (!$settings) {
+            $settings = $this->settings ?: Settings::instance();
+        }
 
         $manyToMany = $settings::get('manyToMany');
         $blocks = $settings::get('blockNeedle');
+
         if ($manyToMany) {
 
             foreach ($manyToMany as $mTable => $tables) {
@@ -583,26 +590,151 @@ abstract class BaseAdmin extends BaseController
                             }
                         }
 
-                        if (!$insert) $this->blocks[array_keys($this->blocks)[0]][] = $tables[$otherKey];
+                        if (!$insert) {
+                            $this->blocks[array_keys($this->blocks)[0]][] = $tables[$otherKey];
+                        }
 
                         $foreign = [];
 
                         if ($this->data) {
                             $res = $this->model->get($mTable, [
                                 'fields' => [$tables[$otherKey] . '_' . $orderData['columns']['id_row']],
-                                'where' => [$this->table . '_' . $this->columns['id_row']
-                                        = $this->data[$this->columns['id_row']]]
+                                'where' => [
+                                    $this->table . '_' . $this->columns['id_row']
+                                        = $this->data[$this->columns['id_row']]
+                                ]
                             ]);
-                            if($res){
-                                foreach ($res as $item){
-                                    $foreign[] = $tables[$otherKey] . '_' . $orderData['columns']['id_row'];
+                            if ($res) {
+
+                                foreach ($res as $item) {
+
+                                    $foreign[] = $item[$tables[$otherKey] . '_' . $orderData['columns']['id_row']];
                                 }
                             }
+                        }
+                        if (isset($tables['type'])) {
+
+                            $data = $this->model->get($tables[$otherKey], [
+                                'fields' => [
+                                    $orderData['columns']['id_row'] . 'as id',
+                                    $orderData['name'],
+                                    $orderData['parent_id']
+                                ],
+                                'order' => $orderData['order']
+                            ]);
+
+                            if ($data) {
+                                foreach ($data as $val) {
+
+                                    if ($tables['type'] === 'root' && $orderData['parent_id']) {
+
+                                        if ($val[$orderData['parent_id']] === null) {
+                                            $this->foreignData[$tables[$otherKey]][$tables[$otherKey]]['sub'][] = $val;
+                                        }
+
+                                    } elseif ($tables['type'] === 'child' && $orderData['parent_id']) {
+
+                                        if ($val[$orderData['parent_id']] !== null) {
+                                            $this->foreignData[$tables[$otherKey]][$tables[$otherKey]]['sub'][] = $val;
+                                        }
+
+                                    } else {
+                                        $this->foreignData[$tables[$otherKey]][$tables[$otherKey]]['sub'][] = $val;
+
+                                    }
+
+                                    if (in_array($val['id'], $foreign)) {
+                                        $this->data[$tables[$otherKey]][$tables[$otherKey]][] = $val['id'];
+                                    }
+
+                                }
+                            }
+                        } elseif ($orderData['parent_id']) {
+
+                            $parent = $tables[$otherKey];
+                            $keys = $this->model->showForeignKey($tables[$otherKey]);
+
+                            if ($keys) {
+
+                                foreach ($keys as $val) {
+
+                                    if ($val['COLUMN_NAME'] === 'parent_id') {
+
+                                        $parent = $val['REFERENCED_TABLE_NAME'];
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if ($parent === $tables[$otherKey]) {
+
+                                $data = $this->model->get($tables[$otherKey], [
+                                    'fields' => [
+                                        $orderData['columns']['id_row'] . 'as id',
+                                        $orderData['name'],
+                                        $orderData['parent_id']
+                                    ],
+                                    'order' => $orderData['order']
+                                ]);
+
+                                if ($data) {
+
+                                    while (($key = key($data)) !== null) {
+
+                                        if (!$data[$key]['parent_id']) {
+                                            $this->foreignData[$tables[$otherKey]][$data[$key]['id']]['name'] = $data[$key['name']];
+                                            unset($data[$key]);
+                                            reset($data);
+                                            continue;
+                                        } else {
+
+                                            if ($this->foreignData[$tables[$otherKey]][$data[$key][$orderData['parent_id']]]) {
+
+                                                $this->foreignData[$tables[$otherKey]][$data[$key][$orderData['parent_id']]]['sub'][$data][$key]['id'] = $data[$key];
+
+                                                if (in_array($data[$key]['id'], $foreign)) {
+                                                    $this->data[$tables[$otherKey]][$data[$key][$orderData['parent_id']]][] = $data[$key]['id'];
+                                                }
+
+                                                unset($data[$key]);
+                                                reset($data);
+                                                continue;
+                                            } else {
+                                                foreach ($this->foreignData[$tables[$otherKey]] as $id => $val) {
+
+                                                    $parent_id = $data[$key][$orderData['parent_id']];
+
+                                                    if (isset($val['sub']) && $val['sub'] && isset($val['sub'][$parent_id])) {
+                                                        $this->foreignData[$tables[$otherKey]][$id]['sub'][$data[$key]['id']] = $data[$key];
+
+                                                        if (in_array($data[$key]['id'], $foreign)) {
+                                                            $this->data[$tables[$otherKey]][$id][] = $data[$key]['id'];
+                                                        }
+
+                                                        unset($data[$key]);
+                                                        reset($data);
+                                                        continue 2 ;
+                                                    }
+                                                }
+                                            }
+                                            next($data);
+
+                                        }
+                                    }
+
+                                }
+
+                            } else {
+
+
+                            }
+
                         }
 
                     }
                 }
             }
+
         }
     }
 
