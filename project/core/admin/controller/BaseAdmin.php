@@ -323,7 +323,6 @@ abstract class BaseAdmin extends BaseController
 
                         if ($validate[$key]['empty']) {
                             $empty = $this->emptyFields($item, $answer);
-
                         }
                         if ($validate[$key]['trim']) {
                             $arr[$key] = trim($item);
@@ -335,15 +334,12 @@ abstract class BaseAdmin extends BaseController
                         if ($validate[$key]['count']) {
                             $count = $this->countChar($item, $validate[$key]['count'], $answer, $arr);
                         }
-
                     }
                 }
             }
-
         }
 
         if (isset($_SESSION['res']['answer'][0])) {
-
             $this->addSessionData($arr);
             exit();
         }
@@ -554,16 +550,16 @@ abstract class BaseAdmin extends BaseController
         $blocks = $settings::get('blockNeedle');
 
         if ($manyToMany) {
-
             foreach ($manyToMany as $mTable => $tables) {
 
                 $targetKey = array_search($this->table, $tables);
 
-                if (!$targetKey !== false) {
+                if ($targetKey !== false) {
 
                     $otherKey = $targetKey ? 0 : 1;
 
                     $checkBoxList = $settings::get('templateArr')['checkboxlist'];
+
                     if (!$checkBoxList || !in_array($tables[$otherKey], $checkBoxList)) {
 
                         continue;
@@ -605,12 +601,11 @@ abstract class BaseAdmin extends BaseController
                                 ]
                             ]);
                             if ($res) {
-
                                 foreach ($res as $item) {
-
                                     $foreign[] = $item[$tables[$otherKey] . '_' . $orderData['columns']['id_row']];
                                 }
                             }
+
                         }
                         if (isset($tables['type'])) {
 
@@ -646,20 +641,19 @@ abstract class BaseAdmin extends BaseController
                                     if (in_array($val['id'], $foreign)) {
                                         $this->data[$tables[$otherKey]][$tables[$otherKey]][] = $val['id'];
                                     }
-
                                 }
                             }
                         } elseif ($orderData['parent_id']) {
 
                             $parent = $tables[$otherKey];
-                            $keys = $this->model->showForeignKey($tables[$otherKey]);
+
+                            $keys = $this->model->showForeignKeys($tables[$otherKey]);
 
                             if ($keys) {
 
                                 foreach ($keys as $val) {
 
                                     if ($val['COLUMN_NAME'] === 'parent_id') {
-
                                         $parent = $val['REFERENCED_TABLE_NAME'];
                                         break;
                                     }
@@ -670,7 +664,7 @@ abstract class BaseAdmin extends BaseController
 
                                 $data = $this->model->get($tables[$otherKey], [
                                     'fields' => [
-                                        $orderData['columns']['id_row'] . 'as id',
+                                        $orderData['columns']['id_row'] . ' as id',
                                         $orderData['name'],
                                         $orderData['parent_id']
                                     ],
@@ -682,15 +676,17 @@ abstract class BaseAdmin extends BaseController
                                     while (($key = key($data)) !== null) {
 
                                         if (!$data[$key]['parent_id']) {
-                                            $this->foreignData[$tables[$otherKey]][$data[$key]['id']]['name'] = $data[$key['name']];
+
+                                            $this->foreignData[$tables[$otherKey]][$data[$key]['id']]['name'] = $data[$key]['name'];
                                             unset($data[$key]);
                                             reset($data);
                                             continue;
+
                                         } else {
 
                                             if ($this->foreignData[$tables[$otherKey]][$data[$key][$orderData['parent_id']]]) {
 
-                                                $this->foreignData[$tables[$otherKey]][$data[$key][$orderData['parent_id']]]['sub'][$data][$key]['id'] = $data[$key];
+                                                $this->foreignData[$tables[$otherKey]][$data[$key][$orderData['parent_id']]]['sub'][$data[$key]['id']] = $data[$key];
 
                                                 if (in_array($data[$key]['id'], $foreign)) {
                                                     $this->data[$tables[$otherKey]][$data[$key][$orderData['parent_id']]][] = $data[$key]['id'];
@@ -699,6 +695,7 @@ abstract class BaseAdmin extends BaseController
                                                 unset($data[$key]);
                                                 reset($data);
                                                 continue;
+
                                             } else {
                                                 foreach ($this->foreignData[$tables[$otherKey]] as $id => $val) {
 
@@ -736,6 +733,7 @@ abstract class BaseAdmin extends BaseController
             }
 
         }
+        dd($this->foreignData);
     }
 
 }

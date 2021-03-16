@@ -28,7 +28,6 @@ class Model extends BaseModel
     FROM information_schema.KEY_COLUMN_USAGE 
     WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$table' AND
    CONSTRAINT_NAME <> 'PRIMERY' AND REFERENCED_TABLE_NAME is not null  $where";
-
         return $this->query($query);
     }
 

@@ -38,13 +38,13 @@ class Settings
             'outputMethod' => 'outputData'
         ],
     ];
-    private $defaultTable = 'teacher';
+    private $defaultTable = 'goods';
 
     private $templateArr = [
         'text' => ['name'],
         'textarea' => ['content'],
         'select' => ['menu_position', 'parent_id'],
-        'checkboxlist' =>['students'],
+        'checkboxlist' =>['filters'],
         'radio' => ['visible'],
         'img' => ['img'],
         'gallery_img' => ['gallery_img']
@@ -63,12 +63,13 @@ class Settings
 
     private $rootItems = [
         'name' => 'корневая',
-        'tables' => ['teacher']
+        'tables' => ['goods']
     ];
 
     private $manyToMany = [
         'teacher_student' =>[
-            'teacher','students'
+            'goods','filters'
+//              'students' , 'teacher'
         ] //'type' => 'child' || 'root'
     ];
 
@@ -89,12 +90,12 @@ class Settings
     ];
 
     private $projectTable = [
-        'teacher' => [
-            'name' => 'учителя',
+        'filters' => [
+            'name' => 'filter',
             'img' => 'pages.png'
         ],
-        'students' => [
-            'name' => 'студенты',
+        'goods' => [
+            'name' => 'goods',
 
         ]
     ];
