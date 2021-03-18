@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 17, 2021 at 05:57 PM
+-- Generation Time: Mar 18, 2021 at 08:15 PM
 -- Server version: 10.5.5-MariaDB-1:10.5.5+maria~focal
 -- PHP Version: 7.4.10
 
@@ -54,7 +54,6 @@ CREATE TABLE `filters` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `content` text DEFAULT NULL,
-  `parent_id` int(10) UNSIGNED DEFAULT NULL,
   `visible` smallint(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -62,16 +61,31 @@ CREATE TABLE `filters` (
 -- Dumping data for table `filters`
 --
 
-INSERT INTO `filters` (`id`, `name`, `content`, `parent_id`, `visible`) VALUES
-(1, 'color', '', NULL, 1),
-(2, 'size', '', NULL, 1),
-(3, 'red', 'content - 2', 1, NULL),
-(4, 'green', 'content - 3', 1, NULL),
-(5, 'black', 'content - 4', 1, NULL),
-(6, '200ml', 'content - 5', 2, NULL),
-(7, '300ml', 'content - 6', 2, NULL),
-(49, 'lightred', NULL, 3, 1),
-(50, 'tttt', '2', 1, 1);
+INSERT INTO `filters` (`id`, `name`, `content`, `visible`) VALUES
+(3, 'red', 'content - 2', NULL),
+(4, 'green', 'content - 3', NULL),
+(5, 'black', 'content - 4', NULL),
+(6, '200ml', 'content - 5', NULL),
+(7, '300ml', 'content - 6', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `filters_categories`
+--
+
+CREATE TABLE `filters_categories` (
+  `id` int(10) NOT NULL,
+  `name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `filters_categories`
+--
+
+INSERT INTO `filters_categories` (`id`, `name`) VALUES
+(1, 'color'),
+(2, 'size');
 
 -- --------------------------------------------------------
 
@@ -219,8 +233,13 @@ ALTER TABLE `articles`
 -- Indexes for table `filters`
 --
 ALTER TABLE `filters`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `11` (`parent_id`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `filters_categories`
+--
+ALTER TABLE `filters_categories`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `goods`
@@ -270,6 +289,12 @@ ALTER TABLE `filters`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
+-- AUTO_INCREMENT for table `filters_categories`
+--
+ALTER TABLE `filters_categories`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `goods`
 --
 ALTER TABLE `goods`
@@ -302,12 +327,6 @@ ALTER TABLE `product`
 --
 ALTER TABLE `articles`
   ADD CONSTRAINT `1-2` FOREIGN KEY (`parent_id`) REFERENCES `pages` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
-
---
--- Constraints for table `filters`
---
-ALTER TABLE `filters`
-  ADD CONSTRAINT `11` FOREIGN KEY (`parent_id`) REFERENCES `filters` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

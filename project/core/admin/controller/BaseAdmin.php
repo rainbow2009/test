@@ -710,7 +710,7 @@ abstract class BaseAdmin extends BaseController
 
                                                         unset($data[$key]);
                                                         reset($data);
-                                                        continue 2 ;
+                                                        continue 2;
                                                     }
                                                 }
                                             }
@@ -723,7 +723,54 @@ abstract class BaseAdmin extends BaseController
 
                             } else {
 
+                                $parentOrderData = $this->createOrderData($parent);
 
+                                $data = $this->model->get($parent, [
+                                    'fields' => [$parentOrderData['name']],
+                                    'join' => [
+                                        $tables[$otherKey] => [
+                                            'fields' => [$orderData ['columns']['id_row'] . ' as id', $orderData['name']],
+                                            'on' => [$parentOrderData['columns']['id_row'], $orderData['parent_id']]
+                                        ]
+                                    ],
+                                    'join_structure' => true
+                                ]);
+
+                                foreach ($data as $key => $val) {
+                                    if (isset($val['join'][$tables[$otherKey]]) && $val['join'][$tables[$otherKey]]) {
+
+                                        $this->foreignData[$tables[$otherKey]][$key]['name'] = $val['name'];
+                                        $this->foreignData[$tables[$otherKey]][$key]['sub'] = $val['join'][$tables[$otherKey]];
+
+                                        foreach ($val['join'][$tables[$otherKey]] as $value) {
+
+                                            if (in_array($value['id'], $foreign)) {
+                                                $this->data[$tables[$otherKey]][$key][] = $value['id'];
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+
+                            $data = $this->model->get($tables[$otherKey], [
+                                'fields' => [$orderData['columns']['id_row'] . ' as id', $orderData['name'], $orderData['parent_id']],
+                                'order' => $orderData['order']
+                            ]);
+
+                            if ($data) {
+
+                                $this->foreignData[$tables[$otherKey]][$tables[$otherKey]]['name'] = "SElECT";
+
+                                foreach ($data as $val) {
+
+                                    $this->foreignData[$tables[$otherKey]][$tables[$otherKey]]['sub'][] = $val;
+
+                                    if (in_array($val['id'], $foreign)) {
+                                        $this->data[$tables[$otherKey]][$tables[$otherKey]][] = $val['id'];
+                                    }
+                                }
                             }
 
                         }
@@ -731,7 +778,6 @@ abstract class BaseAdmin extends BaseController
                     }
                 }
             }
-
         }
         dd($this->foreignData);
     }
