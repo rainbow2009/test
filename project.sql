@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 18, 2021 at 08:15 PM
+-- Generation Time: Mar 21, 2021 at 09:30 PM
 -- Server version: 10.5.5-MariaDB-1:10.5.5+maria~focal
 -- PHP Version: 7.4.10
 
@@ -54,19 +54,22 @@ CREATE TABLE `filters` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `content` text DEFAULT NULL,
-  `visible` smallint(6) DEFAULT NULL
+  `visible` smallint(6) DEFAULT NULL,
+  `parent_id` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `filters`
 --
 
-INSERT INTO `filters` (`id`, `name`, `content`, `visible`) VALUES
-(3, 'red', 'content - 2', NULL),
-(4, 'green', 'content - 3', NULL),
-(5, 'black', 'content - 4', NULL),
-(6, '200ml', 'content - 5', NULL),
-(7, '300ml', 'content - 6', NULL);
+INSERT INTO `filters` (`id`, `name`, `content`, `visible`, `parent_id`) VALUES
+(3, 'red', 'content - 2', NULL, 51),
+(4, 'green', 'content - 3', NULL, 51),
+(5, 'black', 'content - 4', NULL, 51),
+(6, '200ml', 'content - 5', NULL, 52),
+(7, '300ml', 'content - 6', NULL, 52),
+(51, 'color', NULL, NULL, NULL),
+(52, 'size', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -99,7 +102,6 @@ CREATE TABLE `goods` (
   `img` varchar(255) DEFAULT NULL,
   `gallery_img` text DEFAULT NULL,
   `menu_position` int(10) UNSIGNED DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
   `visible` int(11) DEFAULT NULL,
   `content` text DEFAULT NULL,
   `date` date NOT NULL,
@@ -111,33 +113,14 @@ CREATE TABLE `goods` (
 -- Dumping data for table `goods`
 --
 
-INSERT INTO `goods` (`id`, `name`, `img`, `gallery_img`, `menu_position`, `parent_id`, `visible`, `content`, `date`, `datetime`, `alias`) VALUES
-(63, '1', '1.jpg', NULL, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(64, '2', '2.jpg', NULL, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(65, '3', '3.jpg', NULL, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(66, '1', '1.jpg', NULL, 1, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(67, '2', '2.jpg', NULL, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(68, '3', '3.jpg', NULL, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(69, '33', NULL, NULL, 1, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(70, '33', NULL, NULL, 1, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(71, '33', NULL, NULL, 1, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(72, '33', '33.jpg', NULL, 1, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(73, '33!!!', '[\"33.jpg\",\"33.jpg\",\"33.jpg\"]', NULL, 1, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(74, '33!!!', '[\"33.jpg\",\"33.jpg\",\"33.jpg\"]', NULL, 1, NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', ''),
-(75, '321421', NULL, NULL, 13, 74, 1, '421421421421', '2020-10-16', '2020-10-16 15:45:18', ''),
-(76, 'fffffffffffffffffffffff', NULL, NULL, 1, 65, 1, 'fffffffff', '2020-10-16', '2020-10-16 15:49:47', ''),
-(77, '', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:41:04', ''),
-(78, '', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:41:21', ''),
-(79, '', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:41:23', ''),
-(80, '', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:41:26', ''),
-(81, 'w12341241', NULL, NULL, 1, 0, 1, '241421421', '2020-10-16', '2020-10-16 19:41:45', ''),
-(82, 'rweewerrrrrrr', NULL, NULL, 1, 0, 1, 'rewwwwwww', '2020-10-16', '2020-10-16 19:50:14', 'rweewerrrrrrr'),
-(83, '', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:50:17', ''),
-(84, '', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:50:50', ''),
-(85, 'bvcbcbc', NULL, NULL, 21, 84, 1, 'rwqqwrqw', '2020-10-16', '2020-10-16 19:51:12', 'bvcbcbc'),
-(86, 'привет мир 43235345 ;\"№%\"№\";\"! _-', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:51:35', 'privet-mir-43235345-_-'),
-(87, 'ewqewqe', NULL, NULL, 1, 0, 1, '', '2020-10-16', '2020-10-16 19:53:52', 'ewqewqe'),
-(88, 'цвуцйкуцкцук4123лдо 1дьбьцбюььуцдйукжлцйкожуйц', NULL, NULL, 1, 0, 1, 'fddsfsd', '2020-10-16', '2020-10-16 20:09:25', 'tsvutsykutsktsuk4123ldo-1dbtsbyuyutsdyukzhltsykozhuyts');
+INSERT INTO `goods` (`id`, `name`, `img`, `gallery_img`, `menu_position`, `visible`, `content`, `date`, `datetime`, `alias`) VALUES
+(93, 'test1', NULL, NULL, 1, 1, '1', '2021-03-21', '2021-03-21 21:14:48', 'test1'),
+(94, 'test2', NULL, NULL, 1, 1, '1', '2021-03-21', '2021-03-21 21:17:09', 'test2'),
+(95, '1', NULL, NULL, 1, 1, '1', '2021-03-21', '2021-03-21 21:22:34', '1'),
+(96, '1', NULL, NULL, 1, 1, '1', '2021-03-21', '2021-03-21 21:23:31', ''),
+(97, '1', NULL, NULL, 1, 1, '1', '2021-03-21', '2021-03-21 21:23:41', ''),
+(98, '24124', NULL, NULL, 1, 1, '1', '2021-03-21', '2021-03-21 21:25:36', '24124'),
+(99, 'wdfwerfwe', NULL, NULL, 1, 1, '321wrq', '2021-03-21', '2021-03-21 21:26:06', 'wdfwerfwe');
 
 -- --------------------------------------------------------
 
@@ -146,26 +129,22 @@ INSERT INTO `goods` (`id`, `name`, `img`, `gallery_img`, `menu_position`, `paren
 --
 
 CREATE TABLE `goods_filters` (
-  `student` int(10) UNSIGNED NOT NULL,
-  `teacher` int(10) UNSIGNED NOT NULL
+  `goods_id` int(10) UNSIGNED NOT NULL,
+  `filters_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `goods_filters`
 --
 
-INSERT INTO `goods_filters` (`student`, `teacher`) VALUES
-(1, 63),
-(1, 64),
-(1, 65),
-(1, 66),
-(2, 63),
-(2, 64),
-(2, 65),
-(2, 66),
-(3, 63),
-(3, 68),
-(3, 69);
+INSERT INTO `goods_filters` (`goods_id`, `filters_id`) VALUES
+(93, 51),
+(98, 3),
+(98, 4),
+(98, 6),
+(98, 7),
+(99, 4),
+(99, 5);
 
 -- --------------------------------------------------------
 
@@ -233,7 +212,8 @@ ALTER TABLE `articles`
 -- Indexes for table `filters`
 --
 ALTER TABLE `filters`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `filters_filters_id_fk` (`parent_id`);
 
 --
 -- Indexes for table `filters_categories`
@@ -252,7 +232,7 @@ ALTER TABLE `goods`
 -- Indexes for table `goods_filters`
 --
 ALTER TABLE `goods_filters`
-  ADD PRIMARY KEY (`student`,`teacher`);
+  ADD PRIMARY KEY (`goods_id`,`filters_id`);
 
 --
 -- Indexes for table `pages`
@@ -286,7 +266,7 @@ ALTER TABLE `articles`
 -- AUTO_INCREMENT for table `filters`
 --
 ALTER TABLE `filters`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `filters_categories`
@@ -298,7 +278,7 @@ ALTER TABLE `filters_categories`
 -- AUTO_INCREMENT for table `goods`
 --
 ALTER TABLE `goods`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- AUTO_INCREMENT for table `pages`
@@ -327,6 +307,12 @@ ALTER TABLE `product`
 --
 ALTER TABLE `articles`
   ADD CONSTRAINT `1-2` FOREIGN KEY (`parent_id`) REFERENCES `pages` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--
+-- Constraints for table `filters`
+--
+ALTER TABLE `filters`
+  ADD CONSTRAINT `filters_filters_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `filters` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -44,7 +44,7 @@ class Settings
         'text' => ['name'],
         'textarea' => ['content'],
         'select' => ['menu_position', 'parent_id'],
-        'checkboxlist' =>['filters'],
+        'checkboxlist' => ['filters'],
         'radio' => ['visible'],
         'img' => ['img'],
         'gallery_img' => ['gallery_img']
@@ -54,7 +54,7 @@ class Settings
     private $translate = [
         'name' => ['Название', 'Не более 100 символов'],
         'content' => ['Контент', 'Не более 70 символов'],
-        'menu_position' => ['Название1', 'Не']
+        'menu_position' => ['menu Position']
     ];
 
     private $radio = [
@@ -67,9 +67,10 @@ class Settings
     ];
 
     private $manyToMany = [
-        'teacher_student' =>[
-            'goods','filters'
-//              'students' , 'teacher'
+        'goods_filters' => [
+            'goods',
+            'filters',
+            'type' => 'child'
         ] //'type' => 'child' || 'root'
     ];
 

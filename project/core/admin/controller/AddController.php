@@ -29,7 +29,6 @@ class AddController extends BaseAdmin
         $this->checkPost();
 
         $this->createManyToMany();
-        dd(11);
 //        $this->data=[
 //            'name' =>'Man',
 //            'img' => '1.png',

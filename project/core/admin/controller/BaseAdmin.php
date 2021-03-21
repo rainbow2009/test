@@ -286,11 +286,12 @@ abstract class BaseAdmin extends BaseController
         if (!$arr) {
             $arr = &$_POST;
         }
-
         if (!$settings) {
             $settings = Settings::instance();
         }
+
         $validate = $settings::get('validation');
+
         $id = $_POST[$this->columns['id_row']] ?: false;
         if (!$this->translate) {
             $this->translate = $settings::get('translate');
@@ -298,7 +299,7 @@ abstract class BaseAdmin extends BaseController
 
         foreach ($arr as $key => $item) {
             if (is_array($item)) {
-                $this->clearPostFields($item);
+                $this->clearPostFields($settings, $item);
             } else {
                 if (is_numeric($item)) {
                     $arr[$key] = $this->clearNum($item);
@@ -389,6 +390,9 @@ abstract class BaseAdmin extends BaseController
             $answerSuccess = $this->messages['editSuccess'];
             $answerFail = $this->messages['editFail'];
         }
+
+        $this->checkManyToMany();
+
         $this->expansion(get_defined_vars());
 
         $result = $this->checkAlias($_POST[$this->columns['id_row']]);
@@ -611,7 +615,7 @@ abstract class BaseAdmin extends BaseController
 
                             $data = $this->model->get($tables[$otherKey], [
                                 'fields' => [
-                                    $orderData['columns']['id_row'] . 'as id',
+                                    $orderData['columns']['id_row'] . ' as id',
                                     $orderData['name'],
                                     $orderData['parent_id']
                                 ],
@@ -619,6 +623,7 @@ abstract class BaseAdmin extends BaseController
                             ]);
 
                             if ($data) {
+                                $this->foreignData[$tables[$otherKey]][$tables[$otherKey]]['name'] = 'Select';
                                 foreach ($data as $val) {
 
                                     if ($tables['type'] === 'root' && $orderData['parent_id']) {
@@ -779,7 +784,57 @@ abstract class BaseAdmin extends BaseController
                 }
             }
         }
-        dd($this->foreignData);
+    }
+
+    protected function checkManyToMany($settings = false)
+    {
+
+        if (!$settings) {
+            $settings = $this->settings ?: Settings::instance();
+        }
+        $manyToMany = $settings::get('manyToMany');
+
+        if ($manyToMany) {
+
+            foreach ($manyToMany as $mTable => $tables) {
+                $targetKey = array_search($this->table, $tables);
+
+                if ($targetKey !== false) {
+                    $otherKey = $targetKey ? 0 : 1;
+                    $checkboxlist = $settings::get('templateArr')['checkboxlist'];
+                    if (!$checkboxlist || !in_array($tables[$otherKey], $checkboxlist)) continue;
+
+                    $columns = $this->model->showColumns($tables[$otherKey]);
+
+                    $targetRow = $this->table . '_' . $this->columns['id_row'];
+                    $otherRow = $tables[$otherKey] . '_' . $columns['id_row'];
+                    $this->model->delete($mTable, [
+                        'where' => [$targetRow => $_POST[$this->columns['id_row ']]]
+                    ]);
+
+                    if ($_POST[$tables[$otherKey]]) {
+                        $insertArr = [];
+                        $i = 0;
+
+                        foreach ($_POST[$tables[$otherKey]] as $val) {
+                            foreach ($val as $item) {
+                                if ($item) {
+                                    $insertArr[$i][$targetRow] = $_POST[$this->columns['id_row']];
+                                    $insertArr[$i][$otherRow] = $item;
+                                    $i++;
+                                }
+                            }
+                        }
+
+                        if ($insertArr) {
+                            $this->model->add($mTable, [
+                                'fields' => $insertArr
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
