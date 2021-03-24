@@ -18,28 +18,22 @@ class AddController extends BaseAdmin
         if (!$this->userId) {
             $this->execBase();
         }
-        $this->createTableData();
-
-        $this->createRadio();
-        $this->createOutputData();
-
-        $this->createForeignData();
-        $this->createMenuPosition();
 
         $this->checkPost();
 
+        $this->createTableData();
+
+        $this->createForeignData();
+
+        $this->createMenuPosition();
+
+        $this->createRadio();
+
+        $this->createOutputData();
+
         $this->createManyToMany();
-//        $this->data=[
-//            'name' =>'Man',
-//            'img' => '1.png',
-//            'gallery_img' => json_encode(['1.png','2.png']),
-//            'content' =>'edqwwqerwrew'
-//        ];
 
-        // $this->manyAdd();
-        // dd(123);
-
-
+        return $this->expansion();
     }
 
     protected function manyAdd()
@@ -62,7 +56,7 @@ class AddController extends BaseAdmin
     {
 
         if (in_array($this->table, $rootItems['tables'])) {
-            $this->foreignData[$arr['COLUMN_NAME']][0]['id'] = 0;
+            $this->foreignData[$arr['COLUMN_NAME']][0]['id'] = 'NULL';
             $this->foreignData[$arr['COLUMN_NAME']][0]['name'] = $rootItems['name'];
         }
 

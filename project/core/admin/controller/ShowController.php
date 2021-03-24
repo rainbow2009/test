@@ -18,7 +18,7 @@ class ShowController extends BaseAdmin
 
         $this->createTableData();
         $this->createData();
-        return $this->expansion(get_defined_vars());
+        return $this->expansion();
     }
 
 

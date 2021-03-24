@@ -109,8 +109,7 @@ class Model extends BaseModel
             }
         }
 
-        $db_where = isset($db_where) ? $where_equal . ' AND' : 'WHERE';
-
+        $db_where = isset($db_where) ? $db_where . ' AND' : 'WHERE';
         if ($start_pos < $end_pos) {
             $query = "UPDATE $table SET $row = $row -1 $db_where $row <= $end_pos  AND $row > $start_pos";
         }elseif ($start_pos > $end_pos){

@@ -23,9 +23,9 @@ abstract class BaseModelMethods
 
             $arr = $this->createTableAlias($table);
 
-            $concat_table = $arr['alias'].'.';
+            $concat_table = $arr['alias'] . '.';
 
-            $alias_table =  $arr['alias'];
+            $alias_table = $arr['alias'];
         }
 
         $fields = '';
@@ -175,6 +175,12 @@ abstract class BaseModelMethods
                     $where .= $table . $key . ' LIKE ' . "'" . addslashes($item) . "' $condition";
                 } elseif (strpos($item, "SELECT") === 0) {
                     $where .= $table . $key . $operand . ' (' . $item . ")$condition";
+                } elseif ($item === null || $item === "NULL") {
+                    if ($operand === "=") {
+                        $where .= $table . $key . ' IS NULL ' . $condition;
+                    } else {
+                        $where .= $table . $key . ' IS NOT NULL ' . $condition;
+                    }
                 } else {
                     $where .= $table . $key . $operand . "'" . addslashes($item) . "' $condition";
                 }
