@@ -358,7 +358,7 @@ abstract class BaseAdmin extends BaseController
                 $this->clearStr($_POST[$this->columns['id_row']]);
             if ($id) {
                 $where = [$this->columns['id_row'] => $id];
-                $method = 'edit';
+                $method = 'update';
             }
         }
         foreach ($this->columns as $key => $val) {
@@ -376,6 +376,7 @@ abstract class BaseAdmin extends BaseController
         $this->updateMenuPosition();
 
         $except = $this->checkExceptFields();
+
         $res_id = $this->model->$method($this->table, [
             'files' => $this->fileArr,
             'where' => $where,
@@ -581,7 +582,8 @@ abstract class BaseAdmin extends BaseController
 
                         continue;
                     }
-                    if (!$this->translate[$tables[$otherKey]]) {
+                    if (!$this->translate[$tables[$otherKey]])
+
                         if ($settings::get('projectTable')[$tables[$otherKey]]) {
                             $this->translate[$tables[$otherKey]] = [$settings::get('projectTable')[$tables[$otherKey]]['name']];
                         }
@@ -614,7 +616,7 @@ abstract class BaseAdmin extends BaseController
                                 'fields' => [$tables[$otherKey] . '_' . $orderData['columns']['id_row']],
                                 'where' => [
                                     $this->table . '_' . $this->columns['id_row']
-                                        = $this->data[$this->columns['id_row']]
+                                        => $this->data[$this->columns['id_row']]
                                 ]
                             ]);
                             if ($res) {
@@ -797,7 +799,7 @@ abstract class BaseAdmin extends BaseController
                 }
             }
         }
-    }
+
 
     protected function checkManyToMany($settings = false)
     {

@@ -2,6 +2,8 @@
 
 
 namespace admin\controller;
+
+use base\exceptions\RouteException;
 use base\settings\Settings;
 
 
@@ -22,7 +24,11 @@ class EditController extends BaseAdmin
 
         $this->createForeignData();
 
+        $this->createData();
+
+
         $this->createMenuPosition();
+
 
         $this->createRadio();
 
@@ -30,10 +36,22 @@ class EditController extends BaseAdmin
 
         $this->createManyToMany();
 
-        $this->template = ADMIN_TEMPLATE .'add';
+        $this->template = ADMIN_TEMPLATE . 'add';
 
         return $this->expansion();
 
+    }
+
+    protected function createData()
+    {
+        $id = $this->clearNum($this->parameters[$this->table]);
+        if(!$id) throw new RouteException('Не корректный идентификатор -'. $id .
+            ' при редактировании таблицы - '.$this->table);
+        $this->data = $this->model->get($this->table,[
+            'where' => [$this->columns['id_row'] =>$id]
+        ]);
+
+        $this->data && $this->data = $this->data[0];
     }
 
     protected function checkOldAlias($id)
@@ -171,7 +189,7 @@ class EditController extends BaseAdmin
                     'fields' => ['COUNT(*) as count'],
                     'where' => $where,
                     'no_concat' => true
-                ])[0]['count'] + 1;
+                ])[0]['count'] ;
 
             for ($i = 1; $i <= $menu_pos; $i++) {
                 $this->foreignData['menu_position'][$i - 1]['id'] = $i;

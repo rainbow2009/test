@@ -12,7 +12,7 @@
             <select name="<?= $row ?>" class="vg-input vg-text vg-full vg-firm-color1">
                 <?php foreach ($this->foreignData[$row] as $val): ?>
                     <option value="<?= $val['id'] ?>"
-                        <?= $this->data[$row] == $item['id'] ? 'selected' : '' ?> >
+                        <?= $this->data[$row] == $val['id'] ? 'selected' : '' ?> >
                         <?= $val['name'] ?>
                     </option>
                 <? endforeach ?>
