@@ -33,6 +33,7 @@ class Model extends BaseModel
 
     public function updateMenuPosition($table, $row, $where, $end_pos, $update_rows = [])
     {
+
         if ($update_rows && isset($update_rows['where'])) {
 
             $update_rows['operand'] = isset($update_rows['operand']) ? $update_rows['operand'] : ['='];
@@ -73,7 +74,6 @@ class Model extends BaseModel
                 }
 
             } else {
-
                 $start_pos = $this->get($table, [
                         'fields' => ['COUNT(*) as count'],
                         'where' => [$update_rows['where'] => $_POST[$update_rows['where']]],
@@ -96,6 +96,7 @@ class Model extends BaseModel
 
 
         } else {
+
             if ($where) {
                 $start_pos = $this->get($table, [
                     'fields' => [$row],
@@ -107,9 +108,11 @@ class Model extends BaseModel
                         'no_concat' => true
                     ])[0]['count'] + 1;
             }
+
         }
 
         $db_where = isset($db_where) ? $db_where . ' AND' : 'WHERE';
+
         if ($start_pos < $end_pos) {
             $query = "UPDATE $table SET $row = $row -1 $db_where $row <= $end_pos  AND $row > $start_pos";
         }elseif ($start_pos > $end_pos){

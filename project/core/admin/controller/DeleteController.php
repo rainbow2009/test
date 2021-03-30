@@ -46,7 +46,13 @@ class DeleteController extends BaseAdmin
 
                                 if (!empty($this->data[$item])) {
 
-                                    $fileData = json_decode($this->data[$item], true);
+                                    if(preg_match('/^[\[\{].*?[\}\]]$/',$this->data[$item])){
+                                        $fileData = json_decode($this->data[$item], true);
+
+                                    }else{
+                                        $fileData =$this->data[$item];
+                                    }
+
 
                                     if (is_array($fileData)) {
 
@@ -86,16 +92,16 @@ class DeleteController extends BaseAdmin
                         }
 
                         $this->model->updateMenuPosition($this->table, 'menu_position',
-                            [$this->columns['id_row'] => $id, $pos, $where]);
+                            [$this->columns['id_row'] => $id], $pos, $where);
 
                     }
 
-                    if ($this->model->delet($this->table, ['where' => [$this->columns['id_row'] => $id]])) {
+                    if ($this->model->delete($this->table, ['where' => [$this->columns['id_row'] => $id]])) {
 
                         $tables = $this->model->showTables();
 
                         if (in_array('old_alias', $tables)) {
-                            $this->model->delet('old_alias', [
+                            $this->model->delete('old_alias', [
                                 'where' => [
                                     'table_name' => $this->table,
                                     'table_id' => $id
