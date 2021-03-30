@@ -49,6 +49,9 @@ class Settings
         'img' => ['img'],
         'gallery_img' => ['gallery_img']
     ];
+
+    private $fileTemplates = ['img','gallery_img'];
+
     private $formTemplates = PATH . 'admin/view/include/form_templates/';
 
     private $translate = [

@@ -19,5 +19,5 @@ nginx/Logs/access.log
 *log*
 *~
 log
-project/core/userfiles
+project/core/userfiles/
 project/core/sitemap.xml
