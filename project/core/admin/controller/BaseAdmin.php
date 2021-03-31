@@ -352,6 +352,7 @@ abstract class BaseAdmin extends BaseController
     {
         $id = false;
         $method = 'add';
+
         if ($_POST[$this->columns['id_row']]) {
             $id = is_numeric($_POST[$this->columns['id_row']]) ?
                 $this->clearNum($_POST[$this->columns['id_row']]) :
@@ -370,6 +371,11 @@ abstract class BaseAdmin extends BaseController
             }
         }
         $this->createFile();
+
+        if ($id && method_exists($this, 'checkFiles')) {
+            $this->checkFiles($id);
+        }
+
 
         $this->createAlias($id);
 

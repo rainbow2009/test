@@ -9,7 +9,7 @@
                         class="vg_subheader"><?= $this->translate[$row][1] ?></span>
             </div>
         </div>
-        <div class="vg-wrap vg-element vg-full gallery_container">
+        <a class="vg-wrap vg-element vg-full gallery_container">
 
             <label class="vg-dotted-square vg-center">
                 <img src="<?= PATH . ADMIN_TEMPLATE ?>img/plus.png" alt="plus">
@@ -19,9 +19,9 @@
             <?php if ($this->data[$row]): ?>
                 <?php $this->data[$row] = json_decode($this->data[$row]); ?>
                 <?php foreach ($this->data[$row] as $img): ?>
-                    <div class="vg-dotted-square vg-center">
+                    <a href="<?= $this->adminPath . 'delete/' . $this->table . '/' . $this->data[$this->columns['id_row']] . '/' . $row . '/'.base64_encode($img) ?>" class="vg-dotted-square vg-center">
                         <img class="vg_delete" src="<?= PATH . UPLOAD_DIR . $img ?>">
-                    </div>
+                    </a>
                 <?php endforeach ?>
                 <?php
 

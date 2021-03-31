@@ -49,11 +49,11 @@ class EditController extends BaseAdmin
             $this->clearStr($this->parameters[$this->table]);
 
 
-        if(!$id) throw new RouteException('Не корректный идентификатор -'. $id .
-            ' при редактировании таблицы - '.$this->table);
+        if (!$id) throw new RouteException('Не корректный идентификатор -' . $id .
+            ' при редактировании таблицы - ' . $this->table);
 
-        $this->data = $this->model->get($this->table,[
-            'where' => [$this->columns['id_row'] =>$id]
+        $this->data = $this->model->get($this->table, [
+            'where' => [$this->columns['id_row'] => $id]
         ]);
 
         $this->data && $this->data = $this->data[0];
@@ -89,6 +89,39 @@ class EditController extends BaseAdmin
     }
 
 
+    protected function checkFiles($id)
+    {
 
+        if ($id && $this->fileArr) {
+
+            $data = $this->model->get($this->table, [
+                'fields' => array_keys($this->fileArr),
+                'where' => [$this->columns['id_row'] => $id]
+            ]);
+
+            if ($data) {
+                $data = $data[0];
+
+                foreach ($this->fileArr as $key => $item) {
+
+                    if (is_array($item) && !empty($data[$key])) {
+
+                        $fileArr = json_decode($data[$key]);
+
+                        if ($fileArr) {
+
+                            foreach ($fileArr as $file) {
+                                $this->fileArr[$key][] = $file;
+                            }
+                        }
+                    }elseif (!empty($data[$key])) {
+
+                        @unlink($_SERVER['DOCUMENT_ROOT'] . PATH . UPLOAD_DIR . $data[$key]);
+
+                    }
+                }
+            }
+        }
+    }
 
 }
