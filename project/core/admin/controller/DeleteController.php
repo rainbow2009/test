@@ -46,13 +46,8 @@ class DeleteController extends BaseAdmin
 
                                 if (!empty($this->data[$item])) {
 
-                                    if(preg_match('/^[\[\{].*?[\}\]]$/',$this->data[$item])){
-                                        $fileData = json_decode($this->data[$item], true);
 
-                                    }else{
-                                        $fileData =$this->data[$item];
-                                    }
-
+                                    $fileData = json_decode($this->data[$item], true) ?: $this->data[$item];
 
                                     if (is_array($fileData)) {
 
@@ -75,7 +70,7 @@ class DeleteController extends BaseAdmin
                         $where = [];
 
                         if (!empty($this->data['parent_id'])) {
-                            
+
                             $pos = $this->model->get($this->table, [
                                 'fields' => ['COUNT(*) as count'],
                                 'where' => ['parent_id' => $this->data['parent_id']],
@@ -144,6 +139,56 @@ class DeleteController extends BaseAdmin
 
     protected function checkDeleteFiles()
     {
+        unset($this->parameters[$this->table]);
+
+        $updateFlag = false;
+
+        foreach ($this->parameters as $key => $val) {
+
+            $val = base64_decode($val);
+            if (!empty($this->data[$key])) {
+
+                $data = json_decode($this->data[$key], true);
+
+
+                if ($data) {
+
+                    foreach ($data as $items => $item) {
+
+                        if ($val === $item) {
+
+                            $updateFlag = true;
+
+                            @unlink($_SERVER['DOCUMENT_ROOT'] . PATH . UPLOAD_DIR . $item);
+                            unset($data[$items]);
+
+                            $this->data[$key] = $data ? json_encode($data) : 'NULL';
+                            break;
+
+                        }
+                    }
+                }elseif ($this->data[$key] === $val) {
+
+                    $updateFlag = true;
+
+                    @unlink($_SERVER['DOCUMENT_ROOT'] . PATH . UPLOAD_DIR . $item);
+                    $this->data[$key] = 'NULL';
+
+                }
+
+            }
+        }
+        if ($updateFlag){
+            $this->model->update($this->table,[
+                'fields' => $this->data
+            ]);
+
+            $_SESSION['res']['answer'][] = '<div class="vg-element vg-padding-in-px" style="color: green">' . $this->messages['editSuccess'] . '</div>';
+
+        }else{
+            $_SESSION['res']['answer'][] = '<div class="vg-element vg-padding-in-px" style="color: red">' . $this->messages['editFail'] . '</div>';
+        }
+
         $this->redirect();
     }
 }

@@ -354,7 +354,7 @@ abstract class BaseModelMethods
                     }
                     if (in_array($val, $this->sqlFunct)) {
                         $insert_arr['values'] .= $val . ',';
-                    } elseif ($val === 'NULL' || $val === null) {
+                    } elseif ($val === 'NULL' || $val === NULL) {
                         $insert_arr['values'] .= "NULL" . ',';
                     } else {
                         $insert_arr['values'] .= "'" . addslashes($val) . "',";
@@ -436,7 +436,7 @@ abstract class BaseModelMethods
 
                 if (in_array($val, $this->sqlFunct)) {
                     $update .= $val . ',';
-                } elseif ($val === null) {
+                } elseif ($val === 'NULL' || $val === null) {
                     $update .= "NULL" . ',';
 
                 } else {
