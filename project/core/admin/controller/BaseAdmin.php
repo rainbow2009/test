@@ -40,6 +40,12 @@ abstract class BaseAdmin extends BaseController
     protected function inputData()
     {
 
+        if (!MS_MODE) {
+        if( preg_match('/msie|trident.+rv\s*:/i',$_SERVER['HTTP_USER_AGENT'])) {
+            exit('Old browser version! Update to update to latest version');
+        }
+        }
+
         $this->init(true);
         $this->title = 'VG engine';
         if (!$this->model) {

@@ -80,7 +80,7 @@ class Settings
     private $blockNeedle = [
         'vg-rows' => [],
         'vg-img' => ['img'],
-        'vg-content' => ['content',]
+        'vg-content' => ['content']
     ];
 
     private $validation = [

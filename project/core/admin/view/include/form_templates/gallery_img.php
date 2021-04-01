@@ -1,4 +1,4 @@
-<div class="vg-element vg-full vg-box-shadow img_wrapper">
+ <div class="vg-element vg-full vg-box-shadow img_wrapper">
     <div class="vg-wrap vg-element vg-full">
         <div class="vg-wrap vg-element vg-full">
             <div class="vg-element vg-full vg-left">
