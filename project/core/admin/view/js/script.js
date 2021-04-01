@@ -41,8 +41,8 @@ if (files.length) {
                     return false
                 }
 
-                container = parentContainer.querySelector('.empty_container')
-                console.log(container)
+                container = parentContainer.querySelectorAll('.empty_container')
+                console.log(container.length)
 
                 if (container.length < this.files.length) {
 
@@ -54,10 +54,46 @@ if (files.length) {
 
                         parentContainer.append(el)
                     }
-                }
+                    container = parentContainer.querySelectorAll('.empty_container')
 
+                }
+            }
+
+            let fileName = item.name
+
+            let attributeName = item.name.replace(/[\[\]]g/, '')
+
+            for (let i in this.files) {
+
+                if (this.files.hasOwnProperty(i)) {
+
+                    if (multiple) {
+
+                    } else {
+
+                        container = this.closest('.img_container').querySelector('.img_show')
+                        showImage(this.files[i], container)
+                    }
+
+                }
             }
         }
     })
-console.log('end')
+}
+
+function showImage(item, container) {
+
+    let reader = new FileReader()
+
+    container.innerHTML = '';
+
+    reader.readAsDataURL(item)
+
+    reader.onload = e => {
+
+        container.innerHTML = '<img class="img_item" src = "">'
+
+        container.querySelector('img').setAttribute('src', e.target.result)
+    }
+
 }

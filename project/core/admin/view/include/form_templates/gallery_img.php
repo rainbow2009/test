@@ -9,7 +9,7 @@
                         class="vg_subheader"><?= $this->translate[$row][1] ?></span>
             </div>
         </div>
-        <a class="vg-wrap vg-element vg-full gallery_container">
+        <div class="vg-wrap vg-element vg-full gallery_container">
 
             <label class="vg-dotted-square vg-center">
                 <img src="<?= PATH . ADMIN_TEMPLATE ?>img/plus.png" alt="plus">
