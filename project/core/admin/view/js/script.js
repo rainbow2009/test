@@ -68,6 +68,7 @@ if (files.length) {
                 if (this.files.hasOwnProperty(i)) {
 
                     if (multiple) {
+                        if(typeof fileStore[fileName] === 'undefined') fileStore[fileName] = []
 
                     } else {
 
