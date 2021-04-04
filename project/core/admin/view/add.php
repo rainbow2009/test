@@ -1,4 +1,6 @@
-<form class="vg-wrap vg-element vg-ninteen-of-twenty" method="post" action="<?= $this->adminPath . $this->action ?>"
+
+
+<form id="main-form" class="vg-wrap vg-element vg-ninteen-of-twenty" method="post" action="<?= $this->adminPath . $this->action ?>"
       enctype="multipart/form-data">
     <div class="vg-wrap vg-element vg-full">
         <div class="vg-wrap vg-element vg-full vg-firm-background-color4 vg-box-shadow">
@@ -39,7 +41,7 @@
     }
     ?>
     <?php if ($this->data): ?>
-        <input type="hidden" name="<?= $this->columns['id_row'] ?>"
+        <input id = "table_id" type="hidden" name="<?= $this->columns['id_row'] ?>"
                value="<?= $this->data[$this->columns['id_row']] ?>">
     <?php endif ?>
 

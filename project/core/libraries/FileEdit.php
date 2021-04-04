@@ -24,7 +24,9 @@ class FileEdit
 
             if (is_array($file['name'])) {
                 $file_arr = [];
-                for ($i = 0; $i < count($file['name']); $i++) {
+
+              foreach ($file['name'] as $i => $val) {
+                  
                     if (!empty($file['name'][$i])) {
                         $file_arr['name'] = $file['name'][$i];
                         $file_arr['type'] = $file['type'][$i];

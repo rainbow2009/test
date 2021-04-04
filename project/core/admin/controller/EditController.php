@@ -59,69 +59,6 @@ class EditController extends BaseAdmin
         $this->data && $this->data = $this->data[0];
     }
 
-    protected function checkOldAlias($id)
-    {
 
-        $tables = $this->model->showTables();
-
-        if (in_array('old_alias', $tables)) {
-            $old_alias = $this->model->get($this->table, [
-                'fields' => ['alias'],
-                'where' => [$this->columns['id_row'] => $id]
-            ])[0]['alias'];
-
-            if ($old_alias && $old_alias !== $_POST['alias']) {
-                $this->model->delet('old_alias', [
-                    'where' => ['alias' => $old_alias, 'table_name' => $this->table]
-                ]);
-                $this->model->delet('old_alias', [
-                    'where' => ['alias' => $_POST['alias'], 'table_name' => $this->table]
-                ]);
-
-                $this->model->add('old_alias', [
-                    'fields' => ['alias' => $old_alias, 'table_name' => $this->table, 'table_id' => $id],
-                ]);
-            }
-
-        }
-
-
-    }
-
-
-    protected function checkFiles($id)
-    {
-
-        if ($id && $this->fileArr) {
-
-            $data = $this->model->get($this->table, [
-                'fields' => array_keys($this->fileArr),
-                'where' => [$this->columns['id_row'] => $id]
-            ]);
-
-            if ($data) {
-                $data = $data[0];
-
-                foreach ($this->fileArr as $key => $item) {
-
-                    if (is_array($item) && !empty($data[$key])) {
-
-                        $fileArr = json_decode($data[$key]);
-
-                        if ($fileArr) {
-
-                            foreach ($fileArr as $file) {
-                                $this->fileArr[$key][] = $file;
-                            }
-                        }
-                    }elseif (!empty($data[$key])) {
-
-                        @unlink($_SERVER['DOCUMENT_ROOT'] . PATH . UPLOAD_DIR . $data[$key]);
-
-                    }
-                }
-            }
-        }
-    }
 
 }

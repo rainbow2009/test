@@ -50,7 +50,7 @@ class Settings
         'gallery_img' => ['gallery_img']
     ];
 
-    private $fileTemplates = ['img','gallery_img'];
+    private $fileTemplates = ['img', 'gallery_img'];
 
     private $formTemplates = PATH . 'admin/view/include/form_templates/';
 
@@ -66,14 +66,14 @@ class Settings
 
     private $rootItems = [
         'name' => 'корневая',
-        'tables' => ['goods','filters']
+        'tables' => ['goods', 'filters','articles']
     ];
 
     private $manyToMany = [
         'goods_filters' => [
             'goods',
             'filters',
-            'type' => 'child'
+//            'type' => 'root'
         ] //'type' => 'child' || 'root'
     ];
 
@@ -94,13 +94,18 @@ class Settings
     ];
 
     private $projectTable = [
+        'articles' => [
+            'name' => 'статьи',
+        ],
+        'pages' => [
+            'name' => 'страницы',
+        ],
         'filters' => [
             'name' => 'filter',
             'img' => 'pages.png'
         ],
         'goods' => [
             'name' => 'goods',
-
         ]
     ];
 

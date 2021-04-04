@@ -34,6 +34,8 @@ abstract class BaseController
 
     protected $data;
 
+    protected $ajaxData;
+
 
     public function route()
     {

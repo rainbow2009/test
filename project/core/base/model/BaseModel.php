@@ -106,18 +106,26 @@ abstract class BaseModel extends BaseModelMethods
 
         $fields = $this->createFields($set, $table);
 
+
         $where = $this->createWhere($set, $table);
         $join_arr = $this->createJoin($set, $table);
 
         $fields .= rtrim($join_arr['fields'], ',');
+
         $join = $join_arr['join'];
+
         $where .= rtrim($join_arr['where'], ',');
 
         $order = $this->createOrder($set, $table);
+
         $limit = $set['limit'] ? "LIMIT " . $set['limit'] : '';
+
         $fields =trim($fields,',');
+
         $query = "SELECT $fields FROM $table $join $where $order $limit";
+
         $res = $this->query($query);
+
         if (isset($set['join_structure']) && $set['join_structure'] && $res) {
 
             $res = $this->joinStructure($res, $table);

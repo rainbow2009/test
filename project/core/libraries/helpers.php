@@ -3,9 +3,14 @@
 function dd()
 {
     $arrays = func_get_args();
-    print "<pre>";
+
+    if (empty($arrays)) {
+        $arrays = 'hi';
+    }
+
+    echo '<pre>';
     print_r($arrays);
-    print "</pre>";
+    echo '</pre>';
     exit;
 }
 

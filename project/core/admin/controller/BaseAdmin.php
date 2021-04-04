@@ -41,9 +41,9 @@ abstract class BaseAdmin extends BaseController
     {
 
         if (!MS_MODE) {
-        if( preg_match('/msie|trident.+rv\s*:/i',$_SERVER['HTTP_USER_AGENT'])) {
-            exit('Old browser version! Update to update to latest version');
-        }
+            if (preg_match('/msie|trident.+rv\s*:/i', $_SERVER['HTTP_USER_AGENT'])) {
+                exit('Old browser version! Update to update to latest version');
+            }
         }
 
         $this->init(true);
@@ -243,11 +243,17 @@ abstract class BaseAdmin extends BaseController
     {
 
         if ($this->isPost()) {
+
             $this->clearPostFields($settings);
+
             $this->table = $this->clearStr($_POST['table']);
+
             unset($_POST['table']);
+
             if ($this->table) {
+
                 $this->createTableData($settings);
+
                 $this->editData();
             }
         }
@@ -357,9 +363,17 @@ abstract class BaseAdmin extends BaseController
     protected function editData($returnId = false)
     {
         $id = false;
+
         $method = 'add';
 
+        if (!empty($_POST['return_id'])) {
+
+            $returnId = true;
+
+        }
+
         if ($_POST[$this->columns['id_row']]) {
+
             $id = is_numeric($_POST[$this->columns['id_row']]) ?
                 $this->clearNum($_POST[$this->columns['id_row']]) :
                 $this->clearStr($_POST[$this->columns['id_row']]);
@@ -369,9 +383,11 @@ abstract class BaseAdmin extends BaseController
             }
         }
         foreach ($this->columns as $key => $val) {
+
             if ($key === 'id_row') {
                 continue;
             }
+
             if ($val['Type'] === 'date' || $val['Type'] === 'datetime') {
                 !$_POST[$key] && $_POST[$key] = 'NOW()';
             }
@@ -395,13 +411,18 @@ abstract class BaseAdmin extends BaseController
             'return_id' => true,
             'except' => $except
         ]);
+
         if (!$id && $method === 'add') {
+
             $_POST[$this->columns['id_row']] = $res_id;
             $answerSuccess = $this->messages['addSuccess'];
             $answerFail = $this->messages['addFail'];
+
         } else {
+
             $answerSuccess = $this->messages['editSuccess'];
             $answerFail = $this->messages['editFail'];
+
         }
 
         $this->checkManyToMany();
@@ -411,13 +432,20 @@ abstract class BaseAdmin extends BaseController
         $result = $this->checkAlias($_POST[$this->columns['id_row']]);
 
         if ($res_id) {
+
             $_SESSION['res']['answer'][] = '<div class="vg-element vg-padding-in-px" style="color: green">' . $answerSuccess . '</div>';
+
             if (!$returnId) {
                 $this->redirect();
+
             }
+
             return $_POST[$this->columns['id_row']];
+
         } else {
+
             $_SESSION['res']['answer'][] = '<div class="vg-element vg-padding-in-px" style="color: red">' . $answerFail . '</div>';
+
             if (!$returnId) {
                 $this->redirect();
             }
@@ -980,6 +1008,71 @@ abstract class BaseAdmin extends BaseController
 
 
         return;
+    }
+
+    protected function checkOldAlias($id)
+    {
+
+        $tables = $this->model->showTables();
+
+        if (in_array('old_alias', $tables)) {
+            $old_alias = $this->model->get($this->table, [
+                'fields' => ['alias'],
+                'where' => [$this->columns['id_row'] => $id]
+            ])[0]['alias'];
+
+            if ($old_alias && $old_alias !== $_POST['alias']) {
+                $this->model->delet('old_alias', [
+                    'where' => ['alias' => $old_alias, 'table_name' => $this->table]
+                ]);
+                $this->model->delet('old_alias', [
+                    'where' => ['alias' => $_POST['alias'], 'table_name' => $this->table]
+                ]);
+
+                $this->model->add('old_alias', [
+                    'fields' => ['alias' => $old_alias, 'table_name' => $this->table, 'table_id' => $id],
+                ]);
+            }
+
+        }
+
+
+    }
+
+
+    protected function checkFiles($id)
+    {
+
+        if ($id && $this->fileArr) {
+
+            $data = $this->model->get($this->table, [
+                'fields' => array_keys($this->fileArr),
+                'where' => [$this->columns['id_row'] => $id]
+            ]);
+
+            if ($data) {
+                $data = $data[0];
+
+                foreach ($this->fileArr as $key => $item) {
+
+                    if (is_array($item) && !empty($data[$key])) {
+
+                        $fileArr = json_decode($data[$key]);
+
+                        if ($fileArr) {
+
+                            foreach ($fileArr as $file) {
+                                $this->fileArr[$key][] = $file;
+                            }
+                        }
+                    }elseif (!empty($data[$key])) {
+
+                        @unlink($_SERVER['DOCUMENT_ROOT'] . PATH . UPLOAD_DIR . $data[$key]);
+
+                    }
+                }
+            }
+        }
     }
 
 }
