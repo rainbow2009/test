@@ -11,7 +11,7 @@ trait BaseTrait
     {
         if (is_array($str)) {
             foreach ($str as $key => $item) {
-                $str[$key] = trim(strip_tags($item));
+                $str[$key] = $this->clearStr($item);
             }
             return $str;
         } else {
@@ -24,7 +24,7 @@ trait BaseTrait
     protected function clearNum($num)
     {
 
-        return  (!empty($num) && preg_match('/\d/', $num)) ?
+        return (!empty($num) && preg_match('/\d/', $num)) ?
             preg_replace('/[^\d.]/', '', $num) * 1 : 0;
     }
 

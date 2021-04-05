@@ -9,7 +9,7 @@ class ShopSettings
 
     use BaseSettings;
 
-    private array $routes = [
+    private  $routes = [
         'plugins' => [
             'hrUrl' => false,
             'dir' => false,
@@ -20,7 +20,7 @@ class ShopSettings
 
     ];
 
-    private array $templateArr = [
+    private  $templateArr = [
         'text' => ['short', 'price'],
         'textArea' => ['goods_content'],
     ];

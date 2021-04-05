@@ -12,7 +12,7 @@ trait BaseSettings
         instance as SingletonInstance;
     }
 
-    private array $baseSettings;
+    private  $baseSettings;
 
     static public function get($property)
     {
