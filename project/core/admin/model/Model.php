@@ -114,12 +114,36 @@ class Model extends BaseModel
         $db_where = isset($db_where) ? $db_where . ' AND' : 'WHERE';
 
         if ($start_pos < $end_pos) {
-            $query = "UPDATE $table SET $row = $row -1 $db_where $row <= $end_pos  AND $row > $start_pos";
-        }elseif ($start_pos > $end_pos){
-            $query = "UPDATE $table SET $row = $row +1 $db_where $row >= $end_pos  AND $row < $start_pos";
-        }else return;
 
-        return $this->query($query,'u');
+            $query = "UPDATE $table SET $row = $row -1 $db_where $row <= $end_pos  AND $row > $start_pos";
+
+        } elseif ($start_pos > $end_pos) {
+
+            $query = "UPDATE $table SET $row = $row +1 $db_where $row >= $end_pos  AND $row < $start_pos";
+
+        } else return;
+
+        return $this->query($query, 'u');
+
+    }
+
+    public function search($data, $currentTable = false, $limit = 20)
+    {
+
+        $dbTable = $this->showTables();
+
+        $data = addslashes($data);
+
+        $arr = preg_split('/(,|\.)?\s+/', $data, 0, PREG_SPLIT_NO_EMPTY);
+
+
+        for (; ;) {
+            if (!$arr) break;
+
+            $searchArr[] = implode(' ', $arr);
+            unset($arr[count($arr) - 1]);
+        }
+        dd($searchArr);
 
     }
 

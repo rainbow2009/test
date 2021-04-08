@@ -1087,7 +1087,7 @@ abstract class BaseAdmin extends BaseController
 
             $arrKeys = [];
 
-            if (!empty($arrKeys)) $arrKeys = array_keys($this->fileArr);
+            if (!empty($this->fileArr)) $arrKeys = array_keys($this->fileArr);
 
             if (!empty($_POST['js-sorting'])) $arrKeys = array_merge($arrKeys, array_keys($_POST['js-sorting']));
 
@@ -1105,8 +1105,8 @@ abstract class BaseAdmin extends BaseController
                     $data = $data[0];
 
                     foreach ($data as $key => $item) {
+
                         if ((!empty($this->fileArr[$key]) && is_array($this->fileArr[$key])) || !empty($_POST['js-sorting'][$key])) {
-                            dd($_POST);
 
                             $fileArray = json_decode($item);
 

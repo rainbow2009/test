@@ -52,7 +52,6 @@ class IndexController extends BaseController
             'order' =>['id'],
             'order_direction' =>['DESC']
         ]);
-        dd($res);
     }
 
     protected function outputData()

@@ -35,6 +35,7 @@
                     <form method="post" action="<?= PATH . base\settings\Settings::get('routes')['admin']['alias'] ?>"
                           autocomplete="off">
                         <input type="text" name="search" class="vg-input vg-text">
+                        <input type="hidden" name="search_table" value="<?=$this->table?>">
                         <div class="vg-element vg-firm-background-color4 vg-box-shadow search_links search_res"></div>
                     </form>
                 </div>
