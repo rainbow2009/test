@@ -210,10 +210,10 @@ Element.prototype.sortable = (function () {
 
             this.tempTarget = e.target
 
-            target = e.target
+            target = e.target.closest('[draggable=true]')
         }
 
-        if (target && target !== dragEl) {
+        if (target && target !== dragEl && target.parentElement === this) {
 
             let rect = target.getBoundingClientRect()
 
@@ -241,6 +241,8 @@ Element.prototype.sortable = (function () {
     }
 
     return function (options) {
+
+        options = options || {}
 
         this.onUpdate = options.stop || null
 

@@ -392,12 +392,7 @@ abstract class BaseAdmin extends BaseController
                 !$_POST[$key] && $_POST[$key] = 'NOW()';
             }
         }
-        $this->createFile();
-
-        if ($id && method_exists($this, 'checkFiles')) {
-            $this->checkFiles($id);
-        }
-
+        $this->createFiles($id);
 
         $this->createAlias($id);
 
@@ -454,10 +449,55 @@ abstract class BaseAdmin extends BaseController
 
     }
 
-    protected function createFile()
+    protected function createFiles($id)
     {
         $fileEdit = new FileEdit();
+
         $this->fileArr = $fileEdit->addFile();
+
+        if ($id) {
+            $this->checkFiles($id);
+        }
+
+        if (!empty($_POST['js-sorting']) && $this->fileArr) {
+
+            foreach ($_POST['js-sorting'] as $key => $val) {
+
+                if (!empty($val) && !empty($this->fileArr[$key])) {
+
+                    $fileArr = json_decode($val);
+
+                    if ($fileArr) {
+                        $this->fileArr[$key] = $this->sortingFiles($fileArr, $this->fileArr[$key]);
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    protected function sortingFiles($fileArr, $arr)
+    {
+
+        $res = [];
+
+        foreach ($fileArr as $file) {
+
+            if (!is_numeric($file)) {
+
+                $file = substr($file, strlen(PATH . UPLOAD_DIR));
+
+            } else {
+                $file = $arr[$file];
+            }
+
+            if ($file && in_array($file, $arr)) {
+                $res[] = $file;
+            }
+
+        }
+        return $res;
 
     }
 
@@ -1043,35 +1083,49 @@ abstract class BaseAdmin extends BaseController
     protected function checkFiles($id)
     {
 
-        if ($id && $this->fileArr) {
+        if ($id) {
 
-            $data = $this->model->get($this->table, [
-                'fields' => array_keys($this->fileArr),
-                'where' => [$this->columns['id_row'] => $id]
-            ]);
+            $arrKeys = [];
 
-            if ($data) {
-                $data = $data[0];
+            if (!empty($arrKeys)) $arrKeys = array_keys($this->fileArr);
 
-                foreach ($this->fileArr as $key => $item) {
+            if (!empty($_POST['js-sorting'])) $arrKeys = array_merge($arrKeys, array_keys($_POST['js-sorting']));
 
-                    if (is_array($item) && !empty($data[$key])) {
+            if ($arrKeys) {
 
-                        $fileArr = json_decode($data[$key]);
+                $arrKeys = array_unique($arrKeys);
 
-                        if ($fileArr) {
+                $data = $this->model->get($this->table, [
+                    'fields' => $arrKeys,
+                    'where' => [$this->columns['id_row'] => $id]
+                ]);
 
-                            foreach ($fileArr as $file) {
-                                $this->fileArr[$key][] = $file;
+                if ($data) {
+
+                    $data = $data[0];
+
+                    foreach ($data as $key => $item) {
+                        if ((!empty($this->fileArr[$key]) && is_array($this->fileArr[$key])) || !empty($_POST['js-sorting'][$key])) {
+                            dd($_POST);
+
+                            $fileArray = json_decode($item);
+
+                            if ($fileArray) {
+
+                                foreach ($fileArray as $file) {
+                                    $this->fileArr[$key][] = $file;
+                                }
                             }
+                        } elseif (!empty($this->fileArr[$key])) {
+
+                            @unlink($_SERVER['DOCUMENT_ROOT'] . PATH . UPLOAD_DIR . $item);
+
                         }
-                    }elseif (!empty($data[$key])) {
-
-                        @unlink($_SERVER['DOCUMENT_ROOT'] . PATH . UPLOAD_DIR . $data[$key]);
-
                     }
                 }
             }
+
+
         }
     }
 
