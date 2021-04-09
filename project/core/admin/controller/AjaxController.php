@@ -41,19 +41,35 @@ class AjaxController extends BaseAdmin
                     return $this->changeParent();
                     break;
 
+                case  'search':
+
+                    return $this->search();
+                    break;
+
 
             }
         }
         return json_encode(['success' => '0', 'message' => ' No ajax variable']);
     }
 
+    protected function search()
+    {
+
+        $data = $this->clearStr($this->ajaxData['data']);
+
+        $table = $this->clearStr($this->ajaxData['table']);
+
+        return $this->model->search($data,$table,20);
+
+    }
+
     protected function changeParent()
     {
-        return $this->model->get($this->ajaxData['table'],[
-            'fields' => ['COUNT(*) as count'],
-            'where' => ['parent_id' =>$this->ajaxData['parent_id']],
-            'no_concat' => true
-        ])[0]['count'] + $this->ajaxData['iteration'];
+        return $this->model->get($this->ajaxData['table'], [
+                'fields' => ['COUNT(*) as count'],
+                'where' => ['parent_id' => $this->ajaxData['parent_id']],
+                'no_concat' => true
+            ])[0]['count'] + $this->ajaxData['iteration'];
     }
 
 }

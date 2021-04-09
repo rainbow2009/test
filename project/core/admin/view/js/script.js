@@ -463,6 +463,33 @@ let searchResultHover = (() => {
 
 searchResultHover()
 
+search()
+
+function search() {
+
+    let searchInput = document.querySelector('input[name=search]')
+
+    let table = document.querySelector('input[name=search_table]').value
+
+    if (searchInput) {
+
+        searchInput.oninput = () => {
+
+            if (searchInput.value.length > 1) {
+
+                Ajax({
+                    data: {
+                        data: searchInput.value,
+                        table: table,
+                        ajax: 'search'
+                    }
+                }).then(res => {
+                    console.log(res)
+                })
+            }
+        }
+    }
+}
 
 let galleries = document.querySelectorAll('.gallery_container')
 
@@ -475,7 +502,7 @@ if (galleries.length) {
 }
 
 
-document.querySelector('.vg-rows > div').sortable()
+// document.querySelector('.vg-rows > div').sortable()
 
 function createJsSortable(form) {
 
