@@ -42,7 +42,7 @@ class Settings
 
     private $templateArr = [
         'text' => ['name'],
-        'textarea' => ['content'],
+        'textarea' => ['content','tags'],
         'select' => ['menu_position', 'parent_id'],
         'checkboxlist' => ['filters'],
         'radio' => ['visible'],
@@ -78,7 +78,7 @@ class Settings
     ];
 
     private $blockNeedle = [
-        'vg-rows' => [],
+        'vg-rows' => ['tags'],
         'vg-img' => ['img'],
         'vg-content' => ['content']
     ];
@@ -90,7 +90,8 @@ class Settings
         'login' => ['empty' => true, 'trim' => true],
         'password' => ['crypt' => true],
         'keywords' => ['count' => 4, 'trim' => true],
-        'description' => ['count' => 160, 'trim' => true]
+        'description' => ['count' => 160, 'trim' => true],
+        'tags '=> ['count' => 255, 'trim' => true],
     ];
 
     private $projectTable = [
